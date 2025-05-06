@@ -101,9 +101,21 @@ body {
     font-size: 1.25rem;
     font-weight: 600;
 }
-
-/* .brand-text {
-    font-size: 1.25rem;
-    font-weight: 600;
-} */
+.card {
+    border-radius: 8px;
+    overflow: hidden;
+}
+.card-header {
+    font-weight: 500;
+}
+.sidebar-item {
+    padding: 10px;
+    margin-bottom: 5px;
+    font-weight: 500;
+    cursor: pointer;
+}
+.sidebar-item.active {
+    background-color: #d0e2ff;
+    border-radius: 5px;
+}
 

@@ -21,50 +21,7 @@
 
 </head>
 <body>
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
-        <div class="container">
-            <a class="navbar-brand">
-                <h5>Putih Mulia</h5>
-            </a>
-
-            <!-- Tombol toggle untuk tampilan mobile -->
-            <button class="navbar-toggler custom-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="toggler-icon">
-                    <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path class="bar top-bar" d="M5 7H25" stroke="#333" stroke-width="2" stroke-linecap="round"/>
-                        <path class="bar middle-bar" d="M5 15H25" stroke="#333" stroke-width="2" stroke-linecap="round"/>
-                        <path class="bar bottom-bar" d="M5 23H25" stroke="#333" stroke-width="2" stroke-linecap="round"/>
-                    </svg>
-                </span>
-            </button>
-
-            <!-- Menu navigasi collapse -->
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto align-items-center">
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <img src="{{ asset('images/avatar.png') }}" alt="Avatar" class="rounded-circle me-2" width="24" height="24">
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="profileDropdown">
-                            <li>
-                                <h6 class="dropdown-header">Selamat datang!</h6>
-                            </li>
-                            <li><a class="dropdown-item" href=""><i class="fa fa-user me-2"></i> Profil</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li>
-                                <form action="{{ route('logout') }}" method="POST" class="m-0">
-                                    @csrf
-                                    <button class="dropdown-item text-danger" type="submit"><i class="fa fa-sign-out-alt me-2"></i> Logout</button>
-                                </form>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-
+    @include('layouts.navbar')
     <!-- Hero Section -->
     <section class="hero-section">
         <div class="container">
@@ -130,18 +87,7 @@
             </div>
         </div>
     </section>
-
-    <!-- Footer -->
-    <footer class="footer text-center">
-        <div class="container">
-            <p>© {{ date('Y') }} Putih Mulia. All rights reserved.</p>
-            <div>
-                <a href="#" class="text-muted me-3">Privacy Policy</a>
-                <a href="#" class="text-muted me-3">Terms of Service</a>
-                <a href="#" class="text-muted">Contact Us</a>
-            </div>
-        </div>
-    </footer>
+    @include('layouts.footer')
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Custom JS -->

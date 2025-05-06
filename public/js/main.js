@@ -41,4 +41,23 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
+document.addEventListener('DOMContentLoaded', function () {
+    const profileSection = document.getElementById('profileSection');
+    const bookingHistorySection = document.getElementById('bookingHistorySection');
+    const profileMenuItem = document.getElementById('profileMenuItem');
+    const historyMenuItem = document.getElementById('historyMenuItem');
 
+    profileMenuItem.addEventListener('click', function () {
+        profileSection.style.display = 'block';
+        bookingHistorySection.style.display = 'none';
+        profileMenuItem.classList.add('active');
+        historyMenuItem.classList.remove('active');
+    });
+
+    historyMenuItem.addEventListener('click', function () {
+        profileSection.style.display = 'none';
+        bookingHistorySection.style.display = 'block';
+        profileMenuItem.classList.remove('active');
+        historyMenuItem.classList.add('active');
+    });
+});

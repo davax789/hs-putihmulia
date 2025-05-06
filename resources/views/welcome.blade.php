@@ -135,10 +135,10 @@
                     <!-- Tombol Login Sosial -->
 
                     <div class="social-login mb-3">
-                        <a href="#" class="btn btn-social btn-facebook w-100 mb-2">
+                        <a href="{{ url('/auth/facebook/redirect') }}" class="btn btn-social btn-facebook w-100 mb-2">
                             <i class="fab fa-facebook-f me-2"></i> Login dengan Facebook
                         </a>
-                        <a href="#" class="btn btn-social btn-google w-100">
+                        <a href="{{ url('/auth/redirect') }}" class="btn btn-social btn-google w-100">
                             <i class="fab fa-google me-2"></i> Login dengan Google
                         </a>
                     </div>
@@ -185,10 +185,10 @@
                 <div class="modal-body">
                     <!-- Tombol Register Sosial -->
                     <div class="social-login mb-3">
-                        <a href="#" class="btn btn-social btn-facebook w-100 mb-2">
+                        <a href="{{ url('/auth/facebook/redirect') }}" class="btn btn-social btn-facebook w-100 mb-2">
                             <i class="fab fa-facebook-f me-2"></i> Daftar dengan Facebook
                         </a>
-                        <a href="#" class="btn btn-social btn-google w-100">
+                        <a href="{{ url('/auth/redirect') }}" class="btn btn-social btn-google w-100">
                             <i class="fab fa-google me-2"></i> Daftar dengan Google
                         </a>
                     </div>
@@ -197,7 +197,7 @@
                         <span class="divider-text">Atau daftar dengan Email</span>
                     </div>
                     <!-- Register Form -->
-                    {{-- <form action="{{ route('register') }}" method="POST"> --}}
+                    <form action="{{ route('register') }}" method="POST">
                         @csrf
                         <div class="mb-3">
                             <label for="registerName" class="form-label">Nama</label>

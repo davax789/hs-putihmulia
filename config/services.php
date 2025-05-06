@@ -35,4 +35,16 @@ return [
         ],
     ],
 
+    'google' => [
+        'client_id' => env('104318486081-44qof0tphda1t9v62fhlrnh7eipv4i0f.apps.googleusercontent.com'),
+        'client_secret' => env('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'),
+        'redirect' => env('http://localhost:8000/auth/google/callback'),
+    ],
+
+    'facebook' => [
+        'client_id' => env('FACEBOOK_CLIENT_ID'),
+        'client_secret' => env('FACEBOOK_CLIENT_SECRET'),
+        'redirect' => env('FACEBOOK_REDIRECT_URI'),
+    ],
+
 ];
