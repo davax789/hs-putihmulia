@@ -46,3 +46,5 @@ Route::get('/auth/redirect', function () {
     return Socialite::driver('google')->redirect();
 });
 
+
+

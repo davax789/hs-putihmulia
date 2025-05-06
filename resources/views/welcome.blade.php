@@ -161,7 +161,7 @@
                             <input type="email" class="form-control" id="loginEmail" name="email" value="{{ old('email') }}" required>
                         </div>
                         <div class="mb-3">
-                            <label for="loginPassword" class="form-label">Password</label>
+                            <label for="loginPassword" class="form-label">PW</label>
                             <input type="password" class="form-control" id="loginPassword" name="password" required>
                         </div>
                         <button type="submit" class="btn btn-primary btn-rounded w-100">Login</button>
