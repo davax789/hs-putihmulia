@@ -157,7 +157,7 @@
                         @endif
 
                         <div class="mb-3">
-                            <label for="loginEmail" class="form-label">Imel</label>
+                            <label for="loginEmail" class="form-label">Email</label>
                             <input type="email" class="form-control" id="loginEmail" name="email" value="{{ old('email') }}" required>
                         </div>
                         <div class="mb-3">
