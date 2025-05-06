@@ -24,6 +24,8 @@
         <div class="container">
             <a class="navbar-brand" href="#">
                 <h5>Putih Mulia</h5>
+                <h5>Putih Mulia</h5>
+
             </a>
             <button class="navbar-toggler custom-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="toggler-icon">
