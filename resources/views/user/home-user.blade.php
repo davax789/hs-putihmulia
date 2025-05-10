@@ -23,12 +23,24 @@
 <body>
     @include('layouts.navbar')
     <!-- Hero Section -->
-    <section class="hero-section">
-        <div class="container">
+    <section class="hero-section position-relative">
+        <!-- Gambar Background -->
+        <div class="hero-bg">
+            <img src="images/background1.jpg" class="bg-slide active" alt="Slide 1">
+            <img src="images/background2.jpg" class="bg-slide" alt="Slide 2">
+            <img src="images/background3.jpg" class="bg-slide" alt="Slide 3">
+        </div>
+
+        <!-- Tombol Navigasi -->
+        <button class="slide-btn left">&#10094;</button>
+        <button class="slide-btn right">&#10095;</button>
+
+        <!-- Konten -->
+        <div class="container position-relative z-2 text-white text-center">
             <h1 class="display-4 fw-bold">Book Your Perfect Stay</h1>
             <p class="lead">Discover affordable hotels with the best deals!</p>
             <div class="search-box mt-4">
-                {{-- <form action="{{ route('search') }}" method="GET"> --}}
+                <form action="#" method="GET">
                     <div class="row g-3 align-items-center justify-content-center">
                         <div class="col-md-4">
                             <input type="text" class="form-control" placeholder="Find your favorite room" name="destination">
@@ -43,11 +55,11 @@
                             <button type="submit" class="btn btn-primary w-100">Search</button>
                         </div>
                     </div>
-
                 </form>
             </div>
         </div>
     </section>
+
 
     <!-- Promo Section -->
     <section class="promo-section">

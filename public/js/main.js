@@ -61,3 +61,55 @@ document.addEventListener('DOMContentLoaded', function () {
         historyMenuItem.classList.add('active');
     });
 });
+
+    const slides = document.querySelectorAll('.bg-slide');
+    const prevBtn = document.querySelector('.slide-btn.left');
+    const nextBtn = document.querySelector('.slide-btn.right');
+    let current = 0;
+
+    function showSlide(index) {
+        slides.forEach((slide, i) => {
+            slide.classList.remove('active');
+            if (i === index) {
+                slide.classList.add('active');
+            }
+        });
+    }
+
+    function nextSlide() {
+        current = (current + 1) % slides.length;
+        showSlide(current);
+    }
+
+    function prevSlide() {
+        current = (current - 1 + slides.length) % slides.length;
+        showSlide(current);
+    }
+
+    nextBtn.addEventListener('click', nextSlide);
+    prevBtn.addEventListener('click', prevSlide);
+
+    setInterval(nextSlide, 5000);
+
+function openGooglePopup(url) {
+    const width = 500;
+    const height = 600;
+    const left = (screen.width - width) / 2;
+    const top = (screen.height - height) / 2;
+
+    const popup = window.open(
+        url,
+        'GooglePopup',
+        `width=${width},height=${height},top=${top},left=${left},scrollbars=yes,resizable=yes`
+    );
+
+    if (popup) popup.focus();
+
+    const interval = setInterval(() => {
+        if (popup.closed) {
+            clearInterval(interval);
+            window.location.reload(); // reload setelah login/daftar selesai
+        }
+    }, 1000);
+}
+

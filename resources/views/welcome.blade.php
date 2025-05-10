@@ -24,8 +24,6 @@
         <div class="container">
             <a class="navbar-brand" href="#">
                 <h5>Putih Mulia</h5>
-                <h5>Putih Mulia</h5>
-
             </a>
             <button class="navbar-toggler custom-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="toggler-icon">
@@ -47,22 +45,32 @@
     </nav>
 
     <!-- Hero Section -->
-    <section class="hero-section">
-        <div class="container">
+    <section class="hero-section position-relative">
+        <!-- Gambar Background -->
+        <div class="hero-bg">
+            <img src="images/background1.jpg" class="bg-slide active" alt="Slide 1">
+            <img src="images/background2.jpg" class="bg-slide" alt="Slide 2">
+            <img src="images/background4.jpg" class="bg-slide" alt="Slide 3">
+        </div>
+
+        <!-- Tombol Navigasi -->
+        <button class="slide-btn left">&#10094;</button>
+        <button class="slide-btn right">&#10095;</button>
+
+        <!-- Konten -->
+        <div class="container position-relative z-2 text-white text-center">
             <h1 class="display-4 fw-bold">Book Your Perfect Stay</h1>
             <p class="lead">Discover affordable hotels with the best deals!</p>
             <div class="search-box mt-4">
-                {{-- <form action="{{ route('search') }}" method="GET"> --}}
+                <form action="#" method="GET">
                     <div class="row g-3 align-items-center justify-content-center">
                         <div class="col-md-4">
                             <input type="text" class="form-control" placeholder="Find your favorite room" name="destination">
                         </div>
                         <div class="col-md-3">
-                            <!-- Flatpickr untuk input check-in dengan placeholder lebih ringkas -->
                             <input type="text" class="form-control" name="checkin" id="checkin" placeholder="Check-in">
                         </div>
                         <div class="col-md-3">
-                            <!-- Flatpickr untuk input check-out dengan placeholder lebih ringkas -->
                             <input type="text" class="form-control" name="checkout" id="checkout" placeholder="Check-out">
                         </div>
                         <div class="col-md-2">
@@ -73,6 +81,7 @@
             </div>
         </div>
     </section>
+
 
     <!-- Promo Section -->
     <section class="promo-section">
@@ -137,12 +146,12 @@
                     <!-- Tombol Login Sosial -->
 
                     <div class="social-login mb-3">
-                        <a href="{{ url('/auth/facebook/redirect') }}" class="btn btn-social btn-facebook w-100 mb-2">
+                        <a href="{{ url('/redirect') }}" class="btn btn-social btn-facebook w-100 mb-2">
                             <i class="fab fa-facebook-f me-2"></i> Login dengan Facebook
                         </a>
-                        <a href="{{ url('/auth/redirect') }}" class="btn btn-social btn-google w-100">
+                        <button onclick="openGooglePopup('/redirect/google-login')" class="btn btn-social btn-google w-100 mb-2">
                             <i class="fab fa-google me-2"></i> Login dengan Google
-                        </a>
+                        </button>
                     </div>
                     <!-- Pemisah -->
                     <div class="divider my-3 text-center">
@@ -163,7 +172,7 @@
                             <input type="email" class="form-control" id="loginEmail" name="email" value="{{ old('email') }}" required>
                         </div>
                         <div class="mb-3">
-                            <label for="loginPassword" class="form-label">PW</label>
+                            <label for="loginPassword" class="form-label">Password</label>
                             <input type="password" class="form-control" id="loginPassword" name="password" required>
                         </div>
                         <button type="submit" class="btn btn-primary btn-rounded w-100">Login</button>
@@ -187,12 +196,12 @@
                 <div class="modal-body">
                     <!-- Tombol Register Sosial -->
                     <div class="social-login mb-3">
-                        <a href="{{ url('/auth/facebook/redirect') }}" class="btn btn-social btn-facebook w-100 mb-2">
+                        <a href="{{ url('/redirect/facebook') }}" class="btn btn-social btn-facebook w-100 mb-2">
                             <i class="fab fa-facebook-f me-2"></i> Daftar dengan Facebook
                         </a>
-                        <a href="{{ url('/auth/redirect') }}" class="btn btn-social btn-google w-100">
+                        <button onclick="openGooglePopup('/redirect/google-register')" class="btn btn-social btn-google w-100">
                             <i class="fab fa-google me-2"></i> Daftar dengan Google
-                        </a>
+                        </button>
                     </div>
                     <!-- Pemisah -->
                     <div class="divider my-3 text-center">
