@@ -178,3 +178,22 @@ body {
     border-radius: 5px;
 }
 
+/* Pastikan halaman penuh */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+/* Wrapper untuk menampung seluruh halaman */
+.wrapper {
+    min-height: 100vh;          /* Set tinggi minimal 100% viewport */
+    display: flex;
+    flex-direction: column;
+}
+
+/* Main konten akan mengisi sisa ruang */
+main {
+    flex: 1;
+}
+

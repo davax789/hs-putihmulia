@@ -62,43 +62,28 @@
 
 
     <!-- Promo Section -->
-    <section class="promo-section">
-        <div class="container">
-            <h2 class="text-center mb-5">Explore Our Promotions</h2>
-            <div class="row">
-                <div class="col-md-4 mb-4">
-                    <div class="card promo-card">
-                        <img src="https://via.placeholder.com/400x200?text=Promo+1" class="card-img-top" alt="Promo 1">
-                        <div class="card-body">
-                            <h5 class="card-title">Stay 3 Nights, Pay 2</h5>
-                            <p class="card-text">Book now and enjoy an extra night!</p>
-                            <a href="#" class="btn btn-outline-primary">Book Now</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4 mb-4">
-                    <div class="card promo-card">
-                        <img src="https://via.placeholder.com/400x200?text=Promo+2" class="card-img-top" alt="Promo 2">
-                        <div class="card-body">
-                            <h5 class="card-title">Weekend Getaway</h5>
-                            <p class="card-text">Up to 30% off for weekend stays.</p>
-                            <a href="#" class="btn btn-outline-primary">Book Now</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4 mb-4">
-                    <div class="card promo-card">
-                        <img src="https://via.placeholder.com/400x200?text=Promo+3" class="card-img-top" alt="Promo 3">
-                        <div class="card-body">
-                            <h5 class="card-title">Family Package</h5>
-                            <p class="card-text">Special deals for family vacations.</p>
-                            <a href="#" class="btn btn-outline-primary">Book Now</a>
-                        </div>
+<section class="promo-section">
+    <div class="container">
+        <h2 class="text-center mb-5">Explore Our Promotions</h2>
+        <div class="row">
+            @foreach($kamars as $kamar)
+            <div class="col-md-4 mb-4">
+                <div class="card promo-card h-100 d-flex flex-column">
+                    <img src="{{ asset('storage/' . $kamar->photoKamar) }}"
+                         alt="Room Image"
+                         style="width: 100%; height: 150px; object-fit: cover;"
+                         class="card-img-top rounded">
+                    <div class="card-body d-flex flex-column" style="min-height: 200px;">
+                        <h5 class="card-title">{{ $kamar->jenisKamar }}</h5>
+                        <p class="card-text flex-grow-1">{{ $kamar->deskripsi }}</p>
+                        <a href="#" class="btn btn-outline-primary mt-auto">Book Now</a>
                     </div>
                 </div>
             </div>
+            @endforeach
         </div>
-    </section>
+    </div>
+</section>
     @include('layouts.footer')
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

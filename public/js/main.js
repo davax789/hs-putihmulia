@@ -108,7 +108,7 @@ function openGooglePopup(url) {
     const interval = setInterval(() => {
         if (popup.closed) {
             clearInterval(interval);
-            window.location.reload(); // reload setelah login/daftar selesai
+            window.location.reload();
         }
     }, 1000);
 }

@@ -82,4 +82,5 @@ class AuthController extends Controller
 
         return back()->with('success', 'Nama berhasil diperbarui.');
     }
+
 }

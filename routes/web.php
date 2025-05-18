@@ -1,58 +1,40 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BookingKamarController;
+use App\Http\Controllers\KamarDalamController;
+use App\Http\Controllers\KamarDepanController;
+use App\Http\Controllers\SocialAuthController;
+use App\Http\Controllers\WelcomeController;
+use App\Http\Middleware\Admin;
+use App\Http\Middleware\RedirectIfAuthenticated;
+use App\Http\Middleware\User;
 use App\Http\Middleware\UserAdmin;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
 
-// Route untuk pengguna yang sudah terautentikasi
-Route::middleware(['auth'])->group(function () {
-    // Halaman untuk pengguna biasa
-    Route::get('/home', function () {
-        return view('user.home-user');
-    })->name('home');
+Route::get('/', [WelcomeController::class, 'index'])
+    ->middleware(RedirectIfAuthenticated::class)
+    ->name('welcome');
 
-    // Halaman untuk admin
-    Route::middleware([UserAdmin::class])->group(function () {
-        Route::get('/admin-dashboard', function () {
-            return view('admin.admin-dashboard');
-        })->name('admin.dashboard');
+// Rute untuk login dan register
+Route::get('/login', fn () => abort(404));
+Route::post('/login', [AuthController::class, 'login'])->name('login');
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::post('/register', [AuthController::class, 'store'])->name('register');
 
-        // Profile route untuk pengguna yang login
-        Route::get('/profile', fn() => view('user.profile'))->name('profile');
-        Route::post('/profile/update', [AuthController::class, 'updateName'])->name('profile.update');
-    });
-});
-
-// Route default (untuk non-login)
-Route::get('/', function () {
-    if (Auth::check()) {
-        // Mengarahkan ke home atau admin dashboard berdasarkan role
-        return Auth::user()->role === 'admin'
-            ? redirect()->route('admin.dashboard')  // Admin diarahkan ke dashboard admin
-            : redirect()->route('home');  // Pengguna biasa diarahkan ke halaman home
-    }
-    return view('welcome');  // Jika belum login, arahkan ke halaman welcome
-})->name('welcome');
-
-// Route login dan register
-    Route::post('/login', [AuthController::class, 'login'])->name('login');
-    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-    Route::post('/register', [AuthController::class, 'store'])->name('register');
-/////////////////////////////////////////////
-
-
-// Login lewat Google
 Route::get('/redirect/google-login', function () {
     if (Auth::check()) {
         return redirect()->route(Auth::user()->role === 'admin' ? 'admin.dashboard' : 'home');
     }
     session(['google_action' => 'login']);
-    return Socialite::driver('google')->redirect();
+    return Socialite::driver('google')
+        ->with(['prompt' => 'select_account']) // ini penting
+        ->redirect();
 })->name('google.login.redirect');
 
-// Daftar lewat Google
+
 Route::get('/redirect/google-register', function () {
     if (Auth::check()) {
         return redirect()->route(Auth::user()->role === 'admin' ? 'admin.dashboard' : 'home');
@@ -61,5 +43,42 @@ Route::get('/redirect/google-register', function () {
     return Socialite::driver('google')->redirect();
 })->name('google.register.redirect');
 
-// Callback Google (dipakai keduanya)
-Route::get('/callback/google', [AuthController::class, 'handleGoogleCallback']);
+Route::get('/redirect-after-login', function () {
+    if (!Auth::check()) {
+        return redirect()->route('welcome');
+    }
+
+    return Auth::user()->role === 'admin'
+        ? redirect()->route('admin.dashboard')
+        : redirect()->route('home');
+})->name('redirect.after.login');
+
+Route::get('/callback/google', [SocialAuthController::class, 'handleGoogleCallback']);
+
+
+Route::middleware([User::class])->group(function () {
+    Route::get('/home', [KamarDepanController::class, 'home'])->name('home');
+    Route::get('/profile', fn() => view('user.profile'))->name('profile');
+    Route::post('/profile/update', [AuthController::class, 'updateName'])->name('profile.update');
+});
+
+
+Route::middleware([Admin::class])->group(function () {
+Route::get('/admin-dashboard', fn () => view('admin.admin-dashboard'))->name('admin.dashboard');
+Route::get('/admin-order', fn () => view('admin.admin-order'))->name('admin.order');
+Route::get('/admin-kamardepan', [KamarDepanController::class, 'index'])->name('admin.kamarDepan');
+Route::post('/admin-kamardepan', [KamarDepanController::class, 'store'])->name('admin.kamarDepanStore');
+Route::get('/admin-kamarDalam', [KamarDalamController::class, 'index'])->name('admin.kamarDalam');
+Route::post('/admin-kamarDalam', [KamarDalamController::class, 'store'])->name('admin.kamarDalamStore');
+
+
+
+    Route::get('/admin-booking', fn () => view('admin.admin-booking'))->name('admin.booking');
+});
+
+// Route::resource('kamar', KamarDepanController::class)->only(['index', 'show']);
+Route::get('/detail-kamar/{jenisKamar}', [KamarDalamController::class, 'kamarDalam'])->name('detail.kamar');
+Route::get('/booking/{nomorKamar}', [BookingKamarController::class, 'bookingKamar'])->name('booking.kamar');
+
+
+

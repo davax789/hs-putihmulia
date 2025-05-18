@@ -2,50 +2,38 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 use Laravel\Socialite\Facades\Socialite;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 class SocialAuthController extends Controller
 {
-    public function redirectGoogle()
+    public function redirectToGoogle()
     {
-        return Socialite::driver('google')->redirect();
+        return Socialite::driver('google')->stateless()->redirect();
     }
 
     public function handleGoogleCallback()
-    {
-        $googleUser = Socialite::driver('google')->user();
-        return $this->handleSocialLogin($googleUser);
-    }
+{
+    $googleUser = Socialite::driver('google')->stateless()->user();
 
-    public function redirectFacebook()
-    {
-        return Socialite::driver('facebook')->redirect();
-    }
+    // Cek user di database, buat atau login
+    $user = User::firstOrCreate(
+        ['email' => $googleUser->getEmail()],
+        [
+            'name' => $googleUser->getName(),
+            'password' => bcrypt('default_password'),
+            'role' => session('google_action') === 'register' ? 'user' : 'user' // sesuaikan
+        ]
+    );
 
-    public function handleFacebookCallback()
-    {
-        $facebookUser = Socialite::driver('facebook')->user();
-        return $this->handleSocialLogin($facebookUser);
-    }
+    Auth::login($user);
 
-    protected function handleSocialLogin($providerUser)
-    {
-        $user = User::where('email', $providerUser->getEmail())->first();
+    $redirectRoute = $user->role === 'admin' ? route('admin.dashboard') : route('home');
 
-        if (!$user) {
-            $user = User::create([
-                'name' => $providerUser->getName(),
-                'email' => $providerUser->getEmail(),
-                'password' => bcrypt(Str::random(16)),
-                'role' => 'user',
-            ]);
-        }
+    return response()->view('auth.google-popup-close', compact('redirectRoute'));
+}
 
-        Auth::login($user);
-
-        return redirect()->route('home');
-    }
 }
