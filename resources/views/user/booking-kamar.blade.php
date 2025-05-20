@@ -299,7 +299,6 @@ img {
     'water heater'    => 'fa-fire',
     'toilet'          => 'fa-toilet-paper',
 
-    'sofa'            => 'fa-couch',
     'meja'            => 'fa-chair',
     'kursi'           => 'fa-chair',
     'lemari'          => 'fa-archive',
@@ -355,20 +354,15 @@ img {
             <!-- Booking Card -->
             <div class="col-md-6 mb-4">
                 <div class="booking-card border p-4 rounded shadow-sm">
-                    <div class="price-info mb-3">
-                        <p class="final-price fs-4 fw-bold text-danger">
-                          Rp {{ number_format($kamar->hargaPermalam, 0, ',', '.') }}
-                        </p>
-                    </div>
                     <div class="details mb-3">
                         <div class="check d-flex mb-3">
                             <div class="check-in me-3 flex-fill">
                                 <p class="mb-1">Check In</p>
-                                <input type="text" id="checkin-date" class="form-control date-input flatpickr" placeholder="Pilih tanggal check-in">
-                                </div>
+                                <input type="text" id="checkin-date-{{ $kamar->id }}" class="form-control flatpickr" placeholder="Pilih tanggal check-in">
+                            </div>
                             <div class="check-out flex-fill">
                                 <p class="mb-1">Check Out</p>
-                                <input type="text" id="checkout-date" class="form-control date-input flatpickr" placeholder="Pilih tanggal check-out">
+                                <input type="text" id="checkout-date-{{ $kamar->id }}" class="form-control flatpickr" placeholder="Pilih tanggal check-out">
                             </div>
                         </div>
                         <div class="rooms d-flex mb-3">
@@ -388,16 +382,18 @@ img {
                     </div>
                     <div class="savings mb-3">
                         <p>Total harga
-                        <span id="total-harga" class="highlight fw-bold text-success" data-harga="{{ $kamar->hargaPermalam }}">
-                         Rp {{ number_format($kamar->hargaPermalam, 0, ',', '.') }}
-                        </span>
-
+                            <span id="total-harga-{{ $kamar->id }}" data-harga="{{ $kamar->hargaPermalam }}" style="color: green;">
+                                 Rp {{ number_format($kamar->hargaPermalam, 0, ',', '.') }}
+                            </span>
                         </p>
-                    </div>
-                    <button class="book-now btn btn-danger w-100">PESAN SEKARANG</button>
-                </div>
-            </div>
-        </div>
+                        <form action="{{ route('transaksi', $kamar->id) }}" method="post">
+                         @csrf
+                        <input type="hidden" name="check_in" id="checkin-date-{{ $kamar->id }}">
+                        <input type="hidden" name="check_out" id="checkout-date-{{ $kamar->id }}">
+                        <button type="submit" class="book-now btn btn-danger w-100">PESAN SEKARANG</button>
+                        </form>
+                         </div>
+                        </div>
     @endforeach
 </div>
 
@@ -438,65 +434,70 @@ img {
 <!-- Flatpickr JS -->
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const today = new Date().toISOString().split('T')[0]; // format YYYY-MM-DD
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+    const kamarId = "{{ $kamar->id }}"; // ID kamar untuk selector
+    const hargaPerMalam = parseInt(document.getElementById(`total-harga-${kamarId}`).dataset.harga);
 
-        flatpickr("#checkin-date", {
-            defaultDate: today,
-            minDate: today,
-            dateFormat: "Y-m-d"
-        });
+    const checkinInput = document.getElementById(`checkin-date-${kamarId}`);
+    const checkoutInput = document.getElementById(`checkout-date-${kamarId}`);
+    const totalHargaSpan = document.getElementById(`total-harga-${kamarId}`);
 
-        flatpickr("#checkout-date", {
-            defaultDate: today,
-            minDate: today,
-            dateFormat: "Y-m-d"
-        });
-    });
-</script>
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const hargaPerMalam = parseInt(document.getElementById('total-harga').dataset.harga);
+    // Fungsi hitung harga total
+    function hitungTotalHarga() {
+        const checkinDate = new Date(checkinInput.value);
+        const checkoutDate = new Date(checkoutInput.value);
 
-        const checkinInput = document.getElementById("checkin-date");
-        const checkoutInput = document.getElementById("checkout-date");
-        const totalHargaSpan = document.getElementById("total-harga");
-
-        function hitungTotalHarga() {
-            const checkinDate = new Date(checkinInput.value);
-            const checkoutDate = new Date(checkoutInput.value);
-
-            if (checkinDate && checkoutDate && checkoutDate > checkinDate) {
-                const oneDay = 24 * 60 * 60 * 1000;
-                const diffDays = Math.round((checkoutDate - checkinDate) / oneDay);
-                const total = hargaPerMalam * diffDays;
-
-                totalHargaSpan.textContent = "Rp " + total.toLocaleString("id-ID");
-            } else {
-                totalHargaSpan.textContent = "Rp " + hargaPerMalam.toLocaleString("id-ID");
-            }
+        if (checkinDate && checkoutDate && checkoutDate > checkinDate) {
+            const oneDay = 24 * 60 * 60 * 1000;
+            const diffDays = Math.round((checkoutDate - checkinDate) / oneDay);
+            const total = hargaPerMalam * diffDays;
+            totalHargaSpan.textContent = "Rp " + total.toLocaleString("id-ID");
+        } else {
+            totalHargaSpan.textContent = "Rp " + hargaPerMalam.toLocaleString("id-ID");
         }
+    }
 
-        flatpickr("#checkin-date", {
-            defaultDate: new Date(),
-            minDate: "today",
-            dateFormat: "Y-m-d",
-            onChange: hitungTotalHarga
-        });
+    // Default tanggal hari ini dan besok
+    const today = new Date();
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
 
-        flatpickr("#checkout-date", {
-            defaultDate: new Date(),
-            minDate: "today",
-            dateFormat: "Y-m-d",
-            onChange: hitungTotalHarga
-        });
-
-        // Hitung awal saat load
-        hitungTotalHarga();
+    // Init flatpickr untuk checkin
+    flatpickr(checkinInput, {
+        defaultDate: today,
+        minDate: "today",
+        altInput: true,
+        altFormat: "j M",  // tampilkan "20 May"
+        dateFormat: "Y-m-d",
+        onChange: function(selectedDates) {
+            if(selectedDates.length > 0) {
+                // Update minDate checkout supaya tidak sebelum checkin
+                checkoutPicker.set('minDate', selectedDates[0].fp_incr(1)); // minimal 1 hari setelah checkin
+                // Jika checkout lebih kecil dari checkin+1 hari, update checkout otomatis
+                if (checkoutInput._flatpickr.selectedDates[0] <= selectedDates[0]) {
+                    checkoutPicker.setDate(selectedDates[0].fp_incr(1));
+                }
+            }
+            hitungTotalHarga();
+        }
     });
-</script>
 
+    // Init flatpickr untuk checkout
+    const checkoutPicker = flatpickr(checkoutInput, {
+        defaultDate: tomorrow,
+        minDate: tomorrow,
+        altInput: true,
+        altFormat: "j M",  // tampilkan "21 May"
+        dateFormat: "Y-m-d",
+        onChange: hitungTotalHarga
+    });
+
+    // Hitung harga di awal
+    hitungTotalHarga();
+});
+
+    </script>
 
 </body>
 </html>

@@ -5,6 +5,7 @@ use App\Http\Controllers\BookingKamarController;
 use App\Http\Controllers\KamarDalamController;
 use App\Http\Controllers\KamarDepanController;
 use App\Http\Controllers\SocialAuthController;
+use App\Http\Controllers\TransaksiController;
 use App\Http\Controllers\WelcomeController;
 use App\Http\Middleware\Admin;
 use App\Http\Middleware\RedirectIfAuthenticated;
@@ -81,6 +82,7 @@ Route::get('/admin-booking', fn () => view('admin.admin-booking'))->name('admin.
 // Route::resource('kamar', KamarDepanController::class)->only(['index', 'show']);
 Route::get('/detail-kamar/{jenisKamar}', [KamarDalamController::class, 'kamarDalam'])->name('detail.kamar');
 Route::get('/booking/{nomorKamar}', [BookingKamarController::class, 'index'])->name('booking.kamar');
+Route::post('/transaksi', [TransaksiController::class, 'index'])->name('transaksi');
 
 
 

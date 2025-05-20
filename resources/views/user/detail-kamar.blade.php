@@ -30,7 +30,7 @@
        @foreach($kamars as $kamar)
     <div class="col">
         <div class="card h-100 shadow-sm border-0">
-            <img src="{{ asset('storage/' . $kamar->photoKamar) }}"                     class="card-img-top" style="height: 200px; object-fit: cover;"
+            <img src="{{ asset('storage/' . $kamar->photo_utama) }}" class="card-img-top" style="height: 200px; object-fit: cover;"
                      alt="Foto Kamar">
             <div class="card-body d-flex flex-column">
                 <h5 class="card-title">{{ $kamar->jenisKamar ?? 'Tipe Kamar' }}</h5>
