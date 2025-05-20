@@ -18,7 +18,8 @@ return new class extends Migration
             $table->text('deskripsi');
             $table->string('status')->default('tersedia');
             $table->integer('hargaPermalam');
-            $table->timestamps(); // created_at dan updated_at tidak nullable
+            $table->string('photo_utama');
+            $table->timestamps();
         });
     }
 

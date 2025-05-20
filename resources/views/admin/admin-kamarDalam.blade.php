@@ -44,25 +44,40 @@
             <th>#</th>
             <th>Photo Room</th>
             <th>Jenis Kamar</th>
+            <th>Nama Kamar</th>
             <th>Harga /Malam</th>
             <th>Deskripsi</th>
             <th>Action</th>
         </tr>
     </thead>
     <tbody class="text-center align-middle">
-        @foreach ($kamars as $kamar)
-        <tr>
-            <td>{{ $loop->iteration }}</td>
-            <td>
-                <img src="{{ asset('storage/' . $kamar->photoKamar) }}" alt="Room Image" style="width: 100px; height: 70px; object-fit: cover;" class="rounded">
-            </td>
-            <td>{{ $kamar->jenisKamar }}</td>
-            <td>{{ $kamar->hargaPermalam }}</td>
-            <td class="description">{{ $kamar->deskripsi }}</td>
-            <td>
-                <button class="btn btn-warning btn-sm">Add</button>
-            </td>
-        </tr>
+        @foreach ($kamarDalam as $kamar)
+<tr>
+    <td>{{ $loop->iteration }}</td>
+    <td>
+        <img src="{{ asset('storage/' . $kamar->photo_utama) }}" alt="Room Image" style="width: 100px; height: 70px; object-fit: cover;" class="rounded">
+    </td>
+    <td>{{ $kamar->jenisKamar }}</td>
+    <td>{{ $kamar->nomorKamar }}</td>
+    <td>{{ $kamar->hargaPermalam }}</td>
+<td class="text-wrap">
+    {{ $kamar->deskripsi }}
+</td>
+    <td>
+        <button type="button" class="btn btn-primary btn-sm me-1"
+                data-bs-toggle="modal" data-bs-target="#addPhoto{{ $kamar->id }}">
+        <i class="bi bi-plus-circle"></i> Add
+        </button>
+        <button type="button" class="btn btn-warning btn-sm me-1"
+                data-bs-toggle="modal" data-bs-target="#editModal">
+            <i class="bi bi-pencil-square"></i> Edit
+        </button>
+        <button type="button" class="btn btn-danger btn-sm"
+                data-bs-toggle="modal" data-bs-target="#deleteFotoModal">
+            <i class="bi bi-trash"></i> Delete
+        </button>
+    </td>
+</tr>
         @endforeach
     </tbody>
 </table>
@@ -93,7 +108,7 @@
           <div class="mb-3">
             <select class="form-control" id="roomType" name="jenisKamar" required>
             <option value="" disabled selected>-- Pilih Jenis Kamar --</option>
-            @foreach ($kamars as $item)
+            @foreach ($kamarDepan as $item)
             <option value="{{ $item->jenisKamar }}">{{ $item->jenisKamar }}</option>
                 @endforeach
             </select>
@@ -111,8 +126,8 @@
             <textarea class="form-control" id="note" name="deskripsi" rows="3"></textarea>
           </div>
           <div class="mb-3">
-            <label for="roomImages" class="form-label">Foto Kamar</label>
-<input type="file" class="form-control" id="roomImages" name="photoKamar[]" accept="image/*" multiple>
+            <label for="photo_utama" class="form-label">Foto Kamar</label>
+            <input type="file" class="form-control" id="photo_utama" name="photo_utama" accept="image/*" multiple>
           </div>
         </div>
         <div class="modal-footer">
@@ -124,54 +139,25 @@
   </div>
 </div>
 
+        <!-- Modal for Add Photo  -->
 
-
-    <!-- Modal for Edit (Optional) -->
-    <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="editModalLabel">Edit Room</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form>
-                        <div class="mb-3">
-                            <label for="editRoomNumber" class="form-label">Photo Room</label>
-                            <input type="text" class="form-control" id="editRoomNumber"
-                                placeholder="Enter room number">
-                        </div>
-                        <div class="mb-3">
-                            <label for="editRoomType" class="form-label">Room Type</label>
-                            <input type="text" class="form-control" id="editRoomType"
-                                placeholder="Enter room type">
-                        </div>
-                        <div class="mb-3">
-                            <label for="editRoomPrice" class="form-label">Price/Night</label>
-                            <input type="number" class="form-control" id="editRoomPrice"
-                                placeholder="Enter price per night">
-                        </div>
-                        <div class="mb-3">
-                            <label for="editRoomStatus" class="form-label">Status</label>
-                            <select class="form-select" id="editRoomStatus">
-                                <option selected>Choose status</option>
-                                <option value="available">Available</option>
-                                <option value="booked">Booked</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="editRoomImages" class="form-label">Room Images
-                            </label>
-                            <input type="file" class="form-control" id="editRoomImages" multiple
-                                accept="image/*">
-                        </div>
-                        <button type="submit" class="btn btn-primary">Save
-                            Changes</button>
-                    </form>
-                </div>
-            </div>
-        </div>
+@foreach ($kamarDalam as $kamar)
+<div class="modal fade" id="addPhoto{{ $kamar->id }}" tabindex="-1" aria-labelledby="addPhotoLabel{{ $kamar->id }}" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+    <form action="{{ route('admin.addPhoto', ['nomorKamar' => $kamar->nomorKamar]) }}" method="POST" enctype="multipart/form-data">
+    @csrf
+    <label for="photoKamar{{ $kamar->id }}" class="form-label">Pilih Foto Kamar</label>
+    <input type="file" id="photoKamar{{ $kamar->id }}" name="photoKamar[]" class="form-control" accept="image/*" multiple required>
+    <button type="submit" class="btn btn-primary mt-3">Upload</button>
+</form>
     </div>
+  </div>
+</div>
+@endforeach
+
+
+
     <!-- Modal for Delete Confirmation -->
     <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
         <div class="modal-dialog">

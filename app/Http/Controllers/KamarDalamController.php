@@ -14,7 +14,9 @@ class KamarDalamController extends Controller
      */
     public function index()
     {
-                $kamars = KamarDepan::all();
+                $kamars = KamarDalam::all();
+                $kamar = KamarDepan::pluck('jenisKamar');
+
         return view('admin.admin-kamarDalam', compact('kamars'));
     }
 
@@ -23,8 +25,9 @@ class KamarDalamController extends Controller
      */
     public function create()
     {
-        $kamars = KamarDepan::all();
-    return view('admin.admin-kamarDalam', compact('kamars'));
+        $kamarDepan = KamarDepan::all();
+        $kamarDalam = KamarDalam::all();
+    return view('admin.admin-kamarDalam', compact('kamarDepan', 'kamarDalam'));
     }
 
     /**
@@ -63,42 +66,36 @@ class KamarDalamController extends Controller
     public function store(Request $request)
 {
     $request->validate([
-    'jenisKamar' => 'required|exists:kamarDepan,jenisKamar',
-    'nomorKamar' => 'required|string',
-    'deskripsi' => 'required|string',
-    'status' => 'nullable|string',
-    'hargaPermalam' => 'required|integer',
-    'photoKamar' => 'nullable|array',
-    'photoKamar.*' => 'image|max:2048',
-]);
+        'jenisKamar' => 'required|exists:kamarDepan,jenisKamar',
+        'nomorKamar' => 'required|string',
+        'deskripsi' => 'required|string',
+        'status' => 'nullable|string',
+        'hargaPermalam' => 'required|integer',
+        'photo_utama' => 'required|image|max:2048', // Satu file, bukan array
+    ]);
 
-    $kamar = KamarDalam::create([
-    'jenisKamar' => $request->jenisKamar,
-    'nomorKamar' => $request->nomorKamar,
-    'deskripsi' => $request->deskripsi,
-    'status' => $request->status ?? 'tersedia',
-    'hargaPermalam' => $request->hargaPermalam,
-]);
-
-    if ($request->hasFile('photoKamar')) {
-    foreach ($request->file('photoKamar') as $file) {
-        $path = $file->store('kamars', 'public');
-
-        PhotoKamar::create([
-            'kamar_id' => $kamar->id,
-            'photo_path' => $path,
-        ]);
+    // Proses upload foto
+    $photoPath = null;
+    if ($request->hasFile('photo_utama')) {
+        $pathUtama = $request->file('photo_utama')->store('kamar_dalam', 'public');
     }
-}
 
-return redirect()->back()->with('success', 'Kamar dalam berhasil ditambahkan.');
+    // Buat record kamarDalam, simpan path foto ke kolom photoKamar
+    $kamar = KamarDalam::create([
+        'jenisKamar'    => $request->jenisKamar,
+        'nomorKamar'    => $request->nomorKamar,
+        'deskripsi'     => $request->deskripsi,
+        'status'        => $request->status ?? 'tersedia',
+        'hargaPermalam' => $request->hargaPermalam,
+        'photo_utama'    => $pathUtama,
+    ]);
 
+    return redirect()->back()->with('success', 'Kamar dalam berhasil ditambahkan.');
 }
 
 public function kamarDalam($jenisKamar)
 {
-    $kamars = KamarDalam::with('photoKamar')
-                ->where('jenisKamar', $jenisKamar)
+    $kamars = KamarDalam::where('jenisKamar', $jenisKamar)
                 ->get();
 
     return view('user.detail-kamar', compact('kamars', 'jenisKamar'));
@@ -110,11 +107,43 @@ public function kamarDalam($jenisKamar)
         return view('user.detail-kamar', compact('kamars'));
     }
 
-    public function bookingKamar($nomorKamar)
-{
-    $kamars = KamarDalam::where('noKamar', $nomorKamar)
-                ->get();
+    public function editKamar(Request $request)
+    {
+        $kamar = KamarDalam::where('nomorKamar', $request->nomorKamar)->firstOrFail();
+        $validated = $request->validate([
+        'nomorKamar'   => ['required', 'string', 'max:255'],
+        'jenisKamar'    => ['required', 'string'],
+        'deskripsi'    => ['required', 'string'],
+        'hargaPermalam'=> ['required', 'integer'],
+]);
+        $kamar->nomorKamar = $validated['nomorKamar'];
+        $kamar->jenisKamar = $validated['jenisKamar'];
+        $kamar->deskripsi = $validated['deskripsi'];
+        $kamar->hargaPermalam = $validated['hargaPermalam'];
+        $kamar->save();
 
-    return view('user.booking-kamar', compact('kamars', 'nomorKamar'));
+        return back()->with('success', 'Kamar berhasil diperbarui.');
+    }
+public function addPhoto(Request $request, $nomorKamar)
+{
+    $request->validate([
+        'photoKamar' => 'required',
+        'photoKamar.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+    ]);
+
+    $kamar = KamarDalam::where('nomorKamar', $nomorKamar)->firstOrFail();
+
+    if ($request->hasFile('photoKamar')) {
+        foreach ($request->file('photoKamar') as $file) {
+            $path = $file->store('rooms', 'public');
+
+            PhotoKamar::create([
+                'kamar_id' => $kamar->id,
+                'photo_path' => $path,
+            ]);
+        }
+    }
+
+    return back()->with('success', 'Foto kamar berhasil diupload.');
 }
 }

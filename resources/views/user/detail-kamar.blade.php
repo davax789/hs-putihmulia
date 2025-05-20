@@ -26,20 +26,12 @@
 
     @section('content')
 <div class="container my-5">
-    <h2 class="mb-4 fw-bold text-center">Kamar Dalam</h2>
-
     <div class="row row-cols-1 row-cols-md-3 g-4">
        @foreach($kamars as $kamar)
     <div class="col">
         <div class="card h-100 shadow-sm border-0">
-            @if($kamar->photoKamar && $kamar->photoKamar->isNotEmpty())
-                <img src="{{ asset('storage/' . $kamar->photoKamar->first()->photo_path) }}"
-                     class="card-img-top" style="height: 200px; object-fit: cover;"
+            <img src="{{ asset('storage/' . $kamar->photoKamar) }}"                     class="card-img-top" style="height: 200px; object-fit: cover;"
                      alt="Foto Kamar">
-            @else
-                <img src="https://via.placeholder.com/300x200?text=No+Image" class="card-img-top" alt="No Image">
-            @endif
-
             <div class="card-body d-flex flex-column">
                 <h5 class="card-title">{{ $kamar->jenisKamar ?? 'Tipe Kamar' }}</h5>
                 <p class="card-text text-muted">{{ Str::limit(strip_tags($kamar->deskripsi), 100) }}</p>

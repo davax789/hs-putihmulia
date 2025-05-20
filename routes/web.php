@@ -68,17 +68,19 @@ Route::get('/admin-dashboard', fn () => view('admin.admin-dashboard'))->name('ad
 Route::get('/admin-order', fn () => view('admin.admin-order'))->name('admin.order');
 Route::get('/admin-kamardepan', [KamarDepanController::class, 'index'])->name('admin.kamarDepan');
 Route::post('/admin-kamardepan', [KamarDepanController::class, 'store'])->name('admin.kamarDepanStore');
-Route::get('/admin-kamarDalam', [KamarDalamController::class, 'index'])->name('admin.kamarDalam');
-Route::post('/admin-kamarDalam', [KamarDalamController::class, 'store'])->name('admin.kamarDalamStore');
+Route::get('/admin-kamarDalam', [KamarDalamController::class, 'create'])->name('admin.kamarDalam');
+Route::post('/admin-kamarDalam/simpanKamar', [KamarDalamController::class, 'store'])->name('admin.kamarDalamStore');
+// Route::post('/admin-kamarDalam/edit/{nomorKamar}', [KamarDalamController::class, 'editKamar'])->name('edit.kamarDalam');
+Route::post('/admin-kamarDalam/addPhoto{nomorKamar}', [KamarDalamController::class, 'addPhoto'])->name('admin.addPhoto');
 
 
 
-    Route::get('/admin-booking', fn () => view('admin.admin-booking'))->name('admin.booking');
+Route::get('/admin-booking', fn () => view('admin.admin-booking'))->name('admin.booking');
 });
 
 // Route::resource('kamar', KamarDepanController::class)->only(['index', 'show']);
 Route::get('/detail-kamar/{jenisKamar}', [KamarDalamController::class, 'kamarDalam'])->name('detail.kamar');
-Route::get('/booking/{nomorKamar}', [BookingKamarController::class, 'bookingKamar'])->name('booking.kamar');
+Route::get('/booking/{nomorKamar}', [BookingKamarController::class, 'index'])->name('booking.kamar');
 
 
 

@@ -7,11 +7,13 @@ use Illuminate\Http\Request;
 
 class BookingKamarController extends Controller
 {
-        public function bookingKamar($nomorKamar)
+public function index($nomorKamar)
 {
-    $kamars = KamarDalam::where('nomorKamar', $nomorKamar)
+    $kamars = KamarDalam::with('photoKamar')
+                ->where('nomorKamar', $nomorKamar)
                 ->get();
 
     return view('user.booking-kamar', compact('kamars', 'nomorKamar'));
 }
+
 }

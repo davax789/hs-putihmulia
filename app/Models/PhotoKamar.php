@@ -13,9 +13,12 @@ class PhotoKamar extends Model
         'photo_path',
     ];
 
-public function kamar()
-{
-    return $this->belongsTo(KamarDalam::class, 'kamar_id');
 }
 
+class Kamar extends Model
+{
+    public function kamarDalam()
+    {
+        return $this->belongsTo(KamarDalam::class, 'kamar_id');
+    }
 }

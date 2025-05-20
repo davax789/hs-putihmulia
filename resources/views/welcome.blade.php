@@ -97,7 +97,9 @@
                          class="card-img-top rounded">
                     <div class="card-body d-flex flex-column" style="min-height: 200px;">
                         <h5 class="card-title">{{ $kamar->jenisKamar }}</h5>
+                        <small class="text-muted" style="font-size: 12px;">Start From</small>
                         <h5 class="card-title">Rp. {{ $kamar->hargaPermalam }}</h5>
+
                         <p class="card-text flex-grow-1">{{ $kamar->deskripsi }}</p>
                         <a href="{{ route('detail.kamar', $kamar->jenisKamar) }}" class="btn btn-outline-primary mt-auto">Book Now</a>
 
