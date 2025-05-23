@@ -85,7 +85,7 @@
         {{ session('success') }}
     </div>
 @endif
-      <form action="{{ route('admin.kamarDalamStore') }}" method="POST" enctype="multipart/form-data">
+      <form action="{{ route('admin.kamarDepanStore') }}" method="POST" enctype="multipart/form-data">
         @csrf
         <div class="modal-header">
           <h5 class="modal-title" id="addRoomModalLabel">Add New Room</h5>
@@ -94,19 +94,19 @@
         <div class="modal-body">
           <div class="mb-3">
             <label for="roomType" class="form-label">Jenis Kamar</label>
-            <input type="text" class="form-control" id="roomType" name="jenisKamar">
+            <input type="text" class="form-control" id="jenisKamar" name="jenisKamar">
           </div>
           <div class="mb-3">
             <label for="roomPrice" class="form-label">Harga/Malam</label>
-            <input type="number" class="form-control" id="roomPrice" name="hargaPermalam">
+            <input type="number" class="form-control" id="hargaPermalam" name="hargaPermalam">
           </div>
           <div class="mb-3">
             <label for="note" class="form-label">Deskripsi</label>
-            <textarea class="form-control" id="note" name="deskripsi" rows="3"></textarea>
+            <textarea class="form-control" id="deskripsi" name="deskripsi" rows="3"></textarea>
           </div>
           <div class="mb-3">
             <label for="roomImages" class="form-label">Foto Kamar</label>
-            <input type="file" class="form-control" id="roomImages" name="photoKamar" accept="image/*">
+            <input type="file" class="form-control" id="photoKamar" name="photoKamar" accept="image/*">
           </div>
         </div>
         <div class="modal-footer">

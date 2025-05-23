@@ -1,114 +1,29 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Homestay Putih Mulia</title>
-    <!-- Favicon -->
-    <link rel="icon" type="image/png" href="{{ asset('images/favicon.png') }}">
-    <!-- Apple Touch Icon -->
-    <link rel="apple-touch-icon" href="{{ asset('images/favicon-180.png') }}">
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Google Fonts: Poppins -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Font Awesome untuk ikon -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Custom CSS -->
-    <link href="{{ asset('css/style.css') }}" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-</head>
-<body>
-    <!-- Navbar -->
-@auth
-    @include('layouts.navbar')
-@endauth
-
-@guest
-    @include('layouts.logindaftar')
-@endguest
-
-    <!-- Hero Section -->
-    <section class="hero-section position-relative">
-        <!-- Gambar Background -->
-        <div class="hero-bg">
-            <img src="images/background1.jpg" class="bg-slide active" alt="Slide 1">
-            <img src="images/background2.jpg" class="bg-slide" alt="Slide 2">
-            <img src="images/background4.jpg" class="bg-slide" alt="Slide 3">
-        </div>
-
-        <!-- Tombol Navigasi -->
-        <button class="slide-btn left">&#10094;</button>
-        <button class="slide-btn right">&#10095;</button>
-
-        <!-- Konten -->
-        <div class="container position-relative z-2 text-white text-center">
-            <h1 class="display-4 fw-bold">Book Your Perfect Stay</h1>
-            <p class="lead">Discover affordable hotels with the best deals!</p>
-            <div class="search-box mt-4">
-                <form action="#" method="GET">
-                    <div class="row g-3 align-items-center justify-content-center">
-                        <div class="col-md-4">
-                            <input type="text" class="form-control" placeholder="Find your favorite room" name="destination">
-                        </div>
-                        <div class="col-md-3">
-                            <input type="text" class="form-control" name="checkin" id="checkin" placeholder="Check-in">
-                        </div>
-                        <div class="col-md-3">
-                            <input type="text" class="form-control" name="checkout" id="checkout" placeholder="Check-out">
-                        </div>
-                        <div class="col-md-2">
-                            <button type="submit" class="btn btn-primary w-100">Search</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </section>
-
-
-    <!-- Promo Section -->
-<section class="promo-section">
-    <div class="container">
-        <h2 class="text-center mb-5">Explore Our Promotions</h2>
-        <div class="row">
-            @foreach($kamars as $kamar)
-            <div class="col-md-4 mb-4">
-                <div class="card promo-card h-100 d-flex flex-column">
-                    <img src="{{ asset('storage/' . $kamar->photoKamar) }}"
-                         alt="Room Image"
-                         style="width: 100%; height: 150px; object-fit: cover;"
-                         class="card-img-top rounded">
-                    <div class="card-body d-flex flex-column" style="min-height: 200px;">
-                        <h5 class="card-title">{{ $kamar->jenisKamar }}</h5>
-                        <small class="text-muted" style="font-size: 12px;">Start From</small>
-                        <h5 class="card-title">Rp. {{ $kamar->hargaPermalam }}</h5>
-
-                        <p class="card-text flex-grow-1">{{ $kamar->deskripsi }}</p>
-                        <a href="{{ route('detail.kamar', $kamar->jenisKamar) }}" class="btn btn-outline-primary mt-auto">Book Now</a>
-
-                    </div>
-                </div>
-            </div>
-            @endforeach
-        </div>
-    </div>
-</section>
-
-
-    <!-- Footer -->
-    <footer class="footer text-center">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
         <div class="container">
-            <p>© {{ date('Y') }} Putih Mulia. All rights reserved.</p>
-            <div>
-                <a href="#" class="text-muted me-3">Privacy Policy</a>
-                <a href="#" class="text-muted me-3">Terms of Service</a>
-                <a href="#" class="text-muted">Contact Us</a>
+            <a class="navbar-brand" href="#">
+                <h5>Putih Mulia</h5>
+            </a>
+            <button class="navbar-toggler custom-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="toggler-icon">
+                    <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path class="bar top-bar" d="M5 7H25" stroke="#333" stroke-width="2" stroke-linecap="round"/>
+                        <path class="bar middle-bar" d="M5 15H25" stroke="#333" stroke-width="2" stroke-linecap="round"/>
+                        <path class="bar bottom-bar" d="M5 23H25" stroke="#333" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <button class="nav-link btn btn-primary text-dark ms-3 btn-oval" data-bs-toggle="modal" data-bs-target="#authModal">Login | Daftar</button>
+                    </li>
+                </ul>
             </div>
         </div>
-    </footer>
+    </nav>
 
-    <!-- Login Modal -->
+
+     <!-- Login Modal -->
     <div class="modal fade" id="authModal" tabindex="-1" aria-labelledby="authModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -209,17 +124,3 @@
             </div>
         </div>
     </div>
-
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Custom JS -->
-    <script src="{{ asset('js/main.js') }}"></script>
-        <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    @if ($errors->has('login_error'))
-<script>
-    var myModal = new bootstrap.Modal(document.getElementById('authModal'));
-    myModal.show();
-</script>
-@endif
-</body>
-</html>

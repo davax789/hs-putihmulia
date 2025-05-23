@@ -21,7 +21,17 @@
 
 </head>
 <body>
+
+  @auth
+    {{-- Jika user sudah login --}}
     @include('layouts.navbar')
+@endauth
+
+@guest
+    {{-- Jika user belum login --}}
+    @include('layouts.logindaftar')
+@endguest
+
     <!-- Hero Section -->
     <section class="hero-section position-relative">
         <!-- Gambar Background -->
@@ -76,7 +86,7 @@
                     <div class="card-body d-flex flex-column" style="min-height: 200px;">
                         <h5 class="card-title">{{ $kamar->jenisKamar }}</h5>
                         <p class="card-text flex-grow-1">{{ $kamar->deskripsi }}</p>
-                        <a href="#" class="btn btn-outline-primary mt-auto">Book Now</a>
+                        <a href="{{ route('detail.kamar', $kamar->jenisKamar) }}" class="btn btn-outline-primary mt-auto">Book Now</a>
                     </div>
                 </div>
             </div>

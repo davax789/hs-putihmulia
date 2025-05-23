@@ -18,37 +18,31 @@ public function index() {
     return view('admin.admin-kamarDepan', compact('kamar'));
 }
 
-    public function store(Request $request)
+public function store(Request $request)
 {
     $request->validate([
-        'jenisKamar' => 'required|exists:kamar_depan,id',
-        'nomorKamar' => 'required|string',
+        'jenisKamar' => 'required|string',
         'deskripsi' => 'required|string',
-        'status' => 'nullable|string',
         'hargaPermalam' => 'required|integer',
-        'photoKamar.*' => 'image|max:2048', // validasi untuk setiap file
+        'photoKamar' => 'required|image|max:2048',
     ]);
 
-    $photoPaths = [];
+    $photoPath = null;
 
     if ($request->hasFile('photoKamar')) {
-        foreach ($request->file('photoKamar') as $file) {
-            $photoPaths[] = $file->store('kamar', 'public');
-        }
+        $photoPath = $request->file('photoKamar')->store('kamar', 'public');
     }
 
-    // Simpan paths sebagai JSON (atau simpan satu-satu di tabel lain jika perlu)
-    KamarDalam::create([
+    KamarDepan::create([
         'jenisKamar' => $request->jenisKamar,
-        'nomorKamar' => $request->nomorKamar,
         'deskripsi' => $request->deskripsi,
-        'status' => $request->status ?? 'tersedia',
         'hargaPermalam' => $request->hargaPermalam,
-        'photoKamar' => json_encode($photoPaths), // simpan sebagai array JSON
+        'photoKamar' => $photoPath
     ]);
 
-    return redirect()->back()->with('success', 'Kamar dalam berhasil ditambahkan.');
+    return redirect()->back()->with('success', 'Kamar berhasil ditambahkan.');
 }
+
 
 
     public function update(Request $request, $id) {
@@ -76,5 +70,12 @@ public function index() {
         return redirect()->route('kamar.index')->with('success', 'Data berhasil dihapus.');
     }
 
+    public function kamarDepan($jenisKamar)
+{
+    $kamars = KamarDepan::where('jenisKamar', $jenisKamar)
+                ->get();
+
+    return view('user.detail-kamar', compact('kamars', 'jenisKamar'));
+}
 }
 

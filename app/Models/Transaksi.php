@@ -13,6 +13,7 @@ class Transaksi extends Model
 
     protected $fillable = [
         'id_user',
+        'noKamar',
         'kode_transaksi',
         'total_harga',
         'check_in',
@@ -23,16 +24,19 @@ class Transaksi extends Model
         'tanggal_pembayaran',
     ];
 
-    protected $dates = [
-        'check_in',
-        'check_out',
-        'tanggal_transaksi',
-        'tanggal_pembayaran',
-    ];
-
-    // Relasi ke model User
+    /**
+     * Relasi ke user (pemesan)
+     */
     public function user()
     {
         return $this->belongsTo(User::class, 'id_user');
+    }
+
+    /**
+     * Relasi ke kamar
+     */
+    public function kamar()
+    {
+        return $this->belongsTo(KamarDalam::class, 'noKamar', 'nomorKamar');
     }
 }

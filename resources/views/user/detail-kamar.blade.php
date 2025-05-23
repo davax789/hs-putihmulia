@@ -21,8 +21,15 @@
 
 </head>
 <body>
+@auth
+    {{-- Jika user sudah login --}}
     @include('layouts.navbar')
-    <!-- Hero Section -->
+@endauth
+
+@guest
+    {{-- Jika user belum login --}}
+    @include('layouts.logindaftar')
+@endguest    <!-- Hero Section -->
 
     @section('content')
 <div class="container my-5">
@@ -33,7 +40,7 @@
             <img src="{{ asset('storage/' . $kamar->photo_utama) }}" class="card-img-top" style="height: 200px; object-fit: cover;"
                      alt="Foto Kamar">
             <div class="card-body d-flex flex-column">
-                <h5 class="card-title">{{ $kamar->jenisKamar ?? 'Tipe Kamar' }}</h5>
+                <h5 class="card-title">{{ $kamar->nomorKamar ?? 'Tipe Kamar' }}</h5>
                 <p class="card-text text-muted">{{ Str::limit(strip_tags($kamar->deskripsi), 100) }}</p>
                 <h6 class="mt-auto text-primary">Rp {{ number_format($kamar->hargaPermalam, 0, ',', '.') }}/malam</h6>
             </div>

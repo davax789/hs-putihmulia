@@ -27,7 +27,7 @@ class AuthController extends Controller
             if ($user->role === 'admin') {
                 return redirect()->intended('/admin-dashboard');
             } else {
-                return redirect()->intended('/home');
+            return redirect()->to(url()->previous());
             }
         }
 
@@ -66,7 +66,7 @@ class AuthController extends Controller
             return redirect('/admin-dashboard');
         }
 
-        return redirect('/home');
+            return redirect()->to(url()->previous());
     }
 
     public function updateName(Request $request)

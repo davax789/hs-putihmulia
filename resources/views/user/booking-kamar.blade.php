@@ -18,18 +18,13 @@
     <link href="{{ asset('css/style.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
      <style>
-        .img-thumbnail {
+
+ .img-thumbnail {
     object-fit: cover;
     cursor: pointer;
     transition: all 0.3s ease;
-    width: 120px;
     height: 90px;
-}
-
-.img-thumbnail {
     width: 100%;
-    height: 90px;
-    object-fit: cover;
 }
 
 
@@ -58,66 +53,6 @@
     font-size: 0.9em;
 }
 
-.final-price {
-    font-size: 1.5em;
-    font-weight: bold;
-    margin-top: 5px;
-}
-
-.rating {
-    display: flex;
-    align-items: center;
-    margin-top: 10px;
-    font-size: 0.9em;
-}
-
-.rating span:first-child {
-    background-color: #4285f4;
-    color: white;
-    border-radius: 4px;
-    padding: 2px 6px;
-    margin-right: 4px;
-}
-
-.details {
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    padding: 10px;
-    margin-bottom: 10px;
-}
-
-.check, .rooms {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 10px;
-}
-
-.divider {
-    width: 1px;
-    background-color: #e0e0e0;
-    height: 40px;
-    margin: 0 10px;
-}
-
-.type {
-    margin-bottom: 10px;
-}
-
-.type p {
-    margin: 0;
-    padding-bottom: 5px;
-    font-weight: bold;
-}
-
-.savings {
-    font-size: 0.9em;
-    margin-bottom: 15px;
-}
-
-.highlight {
-    float: right;
-    font-weight: bold;
-}
 
 .book-now {
     background-color: #f44336;
@@ -132,9 +67,6 @@
 
 }
 
-.book-now:hover {
-    background-color: #e53935;
-}
 .date-input {
     padding: 5px 10px;
     border-radius: 4px;
@@ -181,7 +113,7 @@
   max-width: 100%;
   overflow-x: hidden;
 }
-/* Hapus scroll horizontal dari seluruh halaman */
+
 html, body {
   margin: 0;
   padding: 0;
@@ -189,14 +121,14 @@ html, body {
   max-width: 100vw;
 }
 
-/* Pastikan semua gambar tidak melewati lebar parent */
+
 img {
   max-width: 100%;
   height: auto;
   display: block;
 }
     .flatpickr-calendar {
-        font-size: 12px !important; /* ukuran teks dalam kalender */
+        font-size: 12px !important;
     }
 
     .flatpickr-input {
@@ -204,6 +136,10 @@ img {
         padding: 6px 8px;
     }
 
+html, body {
+  overflow-x: hidden;
+  max-width: 100vw;
+}
 
 }
 
@@ -211,7 +147,16 @@ img {
 </head>
 <body>
 
+@auth
+    {{-- Jika user sudah login --}}
     @include('layouts.navbar')
+@endauth
+
+@guest
+    {{-- Jika user belum login --}}
+    @include('layouts.logindaftar')
+@endguest
+
 
     <!-- Modal Zoom -->
 <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
@@ -307,8 +252,6 @@ img {
     'dapur'           => 'fa-kitchen-set',
     'kompor'          => 'fa-fire-burner',
     'kulkas'          => 'fa-temperature-low',
-    'microwave'       => 'fa-microwave',
-    'rice cooker'     => 'fa-bowl-rice',
     'sarapan'         => 'fa-coffee',
     'aqua'            => 'fa-glass-water',
     'air minum'       => 'fa-glass-water',
@@ -352,7 +295,8 @@ img {
                 </div>
             </div>
             <!-- Booking Card -->
-            <div class="col-md-6 mb-4">
+
+         <div class="col-md-6 mb-4">
                 <div class="booking-card border p-4 rounded shadow-sm">
                     <div class="details mb-3">
                         <div class="check d-flex mb-3">
@@ -386,16 +330,19 @@ img {
                                  Rp {{ number_format($kamar->hargaPermalam, 0, ',', '.') }}
                             </span>
                         </p>
-                        <form action="{{ route('transaksi', $kamar->id) }}" method="post">
-                         @csrf
-                        <input type="hidden" name="check_in" id="checkin-date-{{ $kamar->id }}">
-                        <input type="hidden" name="check_out" id="checkout-date-{{ $kamar->id }}">
-                        <button type="submit" class="book-now btn btn-danger w-100">PESAN SEKARANG</button>
-                        </form>
+<form action="{{ route('transaksi', $kamar->id) }}" method="post" class="booking-form" data-kamar-id="{{ $kamar->id }}">
+    @csrf
+    <input type="hidden" name="check_in" class="checkin-hidden" id="checkin-hidden-{{ $kamar->id }}">
+    <input type="hidden" name="check_out" class="checkout-hidden" id="checkout-hidden-{{ $kamar->id }}">
+    <button type="submit" class="book-now btn btn-danger w-100">PESAN SEKARANG</button>
+</form>
                          </div>
                         </div>
     @endforeach
 </div>
+</div>
+</div>
+
 
     @include('layouts.footer')
 
@@ -458,23 +405,20 @@ img {
         }
     }
 
-    // Default tanggal hari ini dan besok
     const today = new Date();
     const tomorrow = new Date(today);
     tomorrow.setDate(tomorrow.getDate() + 1);
 
-    // Init flatpickr untuk checkin
     flatpickr(checkinInput, {
         defaultDate: today,
         minDate: "today",
         altInput: true,
-        altFormat: "j M",  // tampilkan "20 May"
+        altFormat: "j M",
         dateFormat: "Y-m-d",
         onChange: function(selectedDates) {
             if(selectedDates.length > 0) {
-                // Update minDate checkout supaya tidak sebelum checkin
-                checkoutPicker.set('minDate', selectedDates[0].fp_incr(1)); // minimal 1 hari setelah checkin
-                // Jika checkout lebih kecil dari checkin+1 hari, update checkout otomatis
+
+                checkoutPicker.set('minDate', selectedDates[0].fp_incr(1));
                 if (checkoutInput._flatpickr.selectedDates[0] <= selectedDates[0]) {
                     checkoutPicker.setDate(selectedDates[0].fp_incr(1));
                 }
@@ -498,6 +442,75 @@ img {
 });
 
     </script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    // Inisialisasi Flatpickr untuk setiap form booking
+    document.querySelectorAll('.booking-form').forEach(form => {
+        const kamarId = form.dataset.kamarId;
+        const checkinInput = document.getElementById(`checkin-date-${kamarId}`);
+        const checkoutInput = document.getElementById(`checkout-date-${kamarId}`);
+        const checkinHidden = document.getElementById(`checkin-hidden-${kamarId}`);
+        const checkoutHidden = document.getElementById(`checkout-hidden-${kamarId}`);
+        const totalHargaSpan = document.getElementById(`total-harga-${kamarId}`);
+        const hargaPerMalam = parseInt(totalHargaSpan.dataset.harga);
 
+        // Fungsi hitung harga total
+        function hitungTotalHarga() {
+            const checkinDate = new Date(checkinInput.value);
+            const checkoutDate = new Date(checkoutInput.value);
+
+            if (checkinDate && checkoutDate && checkoutDate > checkinDate) {
+                const oneDay = 24 * 60 * 60 * 1000;
+                const diffDays = Math.round((checkoutDate - checkinDate) / oneDay);
+                const total = hargaPerMalam * diffDays;
+                totalHargaSpan.textContent = "Rp " + total.toLocaleString("id-ID");
+            } else {
+                totalHargaSpan.textContent = "Rp " + hargaPerMalam.toLocaleString("id-ID");
+            }
+        }
+
+        const today = new Date();
+        const tomorrow = new Date(today);
+        tomorrow.setDate(tomorrow.getDate() + 1);
+
+        // Inisialisasi Flatpickr untuk check-in
+        const checkinPicker = flatpickr(checkinInput, {
+            defaultDate: today,
+            minDate: "today",
+            altInput: true,
+            altFormat: "j M",
+            dateFormat: "Y-m-d",
+            onChange: function(selectedDates) {
+                if (selectedDates.length > 0) {
+                    checkoutPicker.set('minDate', selectedDates[0].fp_incr(1));
+                    if (!checkoutInput._flatpickr.selectedDates[0] || checkoutInput._flatpickr.selectedDates[0] <= selectedDates[0]) {
+                        checkoutPicker.setDate(selectedDates[0].fp_incr(1));
+                    }
+                    checkinHidden.value = checkinInput.value; // Update input hidden
+                    hitungTotalHarga();
+                }
+            }
+        });
+
+        // Inisialisasi Flatpickr untuk check-out
+        const checkoutPicker = flatpickr(checkoutInput, {
+            defaultDate: tomorrow,
+            minDate: tomorrow,
+            altInput: true,
+            altFormat: "j M",
+            dateFormat: "Y-m-d",
+            onChange: function() {
+                checkoutHidden.value = checkoutInput.value; // Update input hidden
+                hitungTotalHarga();
+            }
+        });
+
+        // Hitung harga di awal
+        checkinHidden.value = checkinInput.value;
+        checkoutHidden.value = checkoutInput.value;
+        hitungTotalHarga();
+    });
+});
+</script>
 </body>
 </html>

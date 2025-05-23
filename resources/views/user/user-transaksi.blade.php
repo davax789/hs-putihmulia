@@ -1,140 +1,147 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Homestay Putih Mulia</title>
-    <!-- Favicon -->
-    <link rel="icon" type="image/png" href="{{ asset('images/favicon.png') }}">
-    <!-- Apple Touch Icon -->
-    <link rel="apple-touch-icon" href="{{ asset('images/favicon-180.png') }}">
-    <!-- Bootstrap CSS -->
+    <title>Detail Transaksi</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Google Fonts: Poppins -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Font Awesome untuk ikon -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Custom CSS -->
-    <link href="{{ asset('css/style.css') }}" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-
-
+    <style>
+        .container-custom {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .card-custom {
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .summary-card {
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 20px;
+        }
+        .btn-pay {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 10px;
+            font-weight: bold;
+            border-radius: 5px;
+            width: 100%;
+        }
+        .btn-pay:hover {
+            background-color: #c82333;
+        }
+        .form-label {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .form-control:disabled {
+            background-color: #f8f9fa;
+            border: 1px solid #ced4da;
+        }
+        .text-muted-small {
+            font-size: 0.85rem;
+            color: #6c757d;
+        }
+    </style>
 </head>
 <body>
+@auth
     @include('layouts.navbar')
+@endauth
 
-<!-- Hero Section -->
-<div class="container mt-4">
-    @foreach ($kamars as $pemesanan)
-    <div class="row">
-        {{-- Form Pemesanan (KIRI) --}}
-        <div class="col-md-7">
-            <form action="" method="POST">
-                @csrf
-
-                <div class="mb-3">
-                    <label>Email</label>
-                    <input type="email" name="email" class="form-control" value="{{ $pemesanan->email }}" readonly>
-                </div>
-
-                <div class="row mb-3">
-                    <div class="col-md-2">
-                        <label>Title</label>
-                        <select name="title" class="form-control">
-                            <option {{ $pemesanan->title == 'Mr' ? 'selected' : '' }}>Mr</option>
-                            <option {{ $pemesanan->title == 'Mrs' ? 'selected' : '' }}>Mrs</option>
-                        </select>
-                    </div>
-                    <div class="col-md-5">
-                        <label>Nama Depan</label>
-                        <input type="text" name="nama_depan" class="form-control" value="{{ $pemesanan->nama_depan }}">
-                    </div>
-                    <div class="col-md-5">
-                        <label>Nama Belakang</label>
-                        <input type="text" name="nama_belakang" class="form-control" value="{{ $pemesanan->nama_belakang }}">
-                    </div>
-                </div>
-
-                <div class="mb-3">
-                    <label>Nomor Telepon</label>
-                    <div class="d-flex">
-                        <span class="input-group-text">+62</span>
-                        <input type="text" name="telepon" class="form-control" value="{{ $pemesanan->telepon }}">
-                    </div>
-                </div>
-
-                <div class="mb-3">
-                    <label>Kebangsaan</label>
-                    <select name="kebangsaan" class="form-control">
-                        <option {{ $pemesanan->kebangsaan == 'INDONESIA' ? 'selected' : '' }}>INDONESIA</option>
-                        <option {{ $pemesanan->kebangsaan != 'INDONESIA' ? 'selected' : '' }}>Others</option>
-                    </select>
-                </div>
-            </form>
-        </div>
-
-        {{-- Ringkasan Transaksi --}}
-        <div class="col-md-5">
-            <div class="booking-card border p-4 rounded shadow-sm">
-                <div class="price-info mb-3">
-                    <p class="final-price fs-4 fw-bold text-danger">
-                        Rp {{ number_format($pemesanan->hargaPermalam, 0, ',', '.') }}
-                    </p>
-                </div>
-
-                <div class="details mb-3">
-                    <div class="check d-flex mb-3">
-                        <div class="check-in me-3 flex-fill">
-                            <p class="mb-1">Check In</p>
-                            <input type="text" id="checkin-date" class="form-control date-input flatpickr" placeholder="Pilih tanggal check-in">
-                        </div>
-                        <div class="check-out flex-fill">
-                            <p class="mb-1">Check Out</p>
-                            <input type="text" id="checkout-date" class="form-control date-input flatpickr" placeholder="Pilih tanggal check-out">
+@guest
+    @include('layouts.logindaftar')
+@endguest
+    <div class="container-custom">
+        <div class="row">
+            <!-- Form Detail Pemesan -->
+            <div class="col-md-8 mb-4">
+                <div class="card card-custom p-4">
+                    <h5 class="mb-3">Saya memesan untuk</h5>
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" value="{{ auth()->user()->email ?? '' }}" disabled>
                         </div>
                     </div>
-                    <div class="rooms d-flex mb-3">
-                        <div class="room-count me-3 flex-fill">
-                            <p class="mb-1">Jumlah Kamar</p>
-                            <span>1</span>
+                    <div class="row mb-3">
+                        <div class="col-md-2">
+                            <label for="title" class="form-label">Title</label>
+                            <input type="text" class="form-control" id="title" value="Mr" disabled>
                         </div>
-                        <div class="guests flex-fill">
-                            <p class="mb-1">Tamu</p>
-                            <span>2</span>
+                        <div class="col-md-5">
+                            <label for="nama_depan" class="form-label">Nama Lengkap</label>
+                            <input type="text" class="form-control" id="nama_depan" value="{{ auth()->user()->name ?? '' }}" disabled>
                         </div>
                     </div>
-                    <div class="type mb-3">
-                            <p class="mb-1"><strong>Tipe Kamar</strong></p>
-                        <span>{{ $pemesanan->jenisKamar }}</span>
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <label for="nomor_telepon" class="form-label">Nomor Telepon</label>
+                            <div class="input-group">
+                                <span class="input-group-text">+62</span>
+                                <input type="text" class="form-control" id="nomor_telepon">
+                            </div>
+                        </div>
                     </div>
-                </div>
-
-                <div class="savings mb-3">
-                    <p>Total harga
-                        <span id="total-harga" class="highlight fw-bold text-success" data-harga="{{ $pemesanan->hargaPermalam }}">
-                            Rp {{ number_format($pemesanan->hargaPermalam, 0, ',', '.') }}
-                        </span>
-                    </p>
-                    <form action="{{ route('transaksi', $pemesanan->id) }}" method="post">
-                        @csrf
-                        <input type="hidden" name="check_in" id="checkin-date-{{ $pemesanan->id }}">
-                        <input type="hidden" name="check_out" id="checkout-date-{{ $pemesanan->id }}">
-                        <button type="submit" class="book-now btn btn-danger w-100">PESAN SEKARANG</button>
-                    </form>
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <label for="kebangsaan" class="form-label">Kebangsaan</label>
+                            <input type="text" class="form-control" id="kebangsaan" value="INDONESIA" disabled>
+                        </div>
+                    </div>
                 </div>
             </div>
+
+            <!-- Ringkasan Pemesanan -->
+            <div class="col-md-4 mb-4">
+    <div class="card summary-card p-3">
+        <img src="{{ asset('storage/' . $kamar->photo_utama) }}"
+             alt="Gambar Kamar {{ $kamar->nomorKamar }}"
+             class="img-fluid rounded mb-2" style="max-height: 100px; object-fit: cover; width: 100%;">
+        <h6 class="mb-2"><strong>{{ $kamar->nomorKamar }}</strong></h6>
+        <p class="text-muted mb-2" style="font-size: 0.9rem;">{{ $kamar->jenisKamar }}</p>
+        <div class="row mb-2">
+            <div class="col-6">
+                <small class="text-muted">CHECK IN</small><br>
+                {{ \Carbon\Carbon::parse($check_in)->translatedFormat('D, d M') }}
+            </div>
+            <div class="col-6">
+                <small class="text-muted">CHECK OUT</small><br>
+                {{ \Carbon\Carbon::parse($check_out)->translatedFormat('D, d M') }}
+            </div>
         </div>
+        <div class="row mb-2">
+            <div class="col-6">
+                <small class="text-muted">Kamar</small><br>
+                1
+            </div>
+            <div class="col-6">
+                <small class="text-muted">Tamu</small><br>
+                2
+            </div>
+        </div>
+        <hr class="my-2">
+        <div class="d-flex justify-content-between mb-2">
+            <small class="text-muted">Jumlah biaya:</small>
+            <strong>Rp {{ number_format($total_harga, 0, ',', '.') }}</strong>
+        </div>
+        <form action="{{ route('transaksi.confirm') }}" method="POST" class="mt-2">
+            @csrf
+            <input type="hidden" name="kamar_id" value="{{ $kamar->id }}">
+            <input type="hidden" name="check_in" value="{{ $check_in }}">
+            <input type="hidden" name="check_out" value="{{ $check_out }}">
+            <input type="hidden" name="jumlah_kamar" value="1">
+            <input type="hidden" name="jumlah_tamu" value="2">
+            <button type="submit" class="btn btn-danger btn-sm w-100">Bayar Sekarang</button>
+        </form>
     </div>
-    @endforeach
+</div>
+</div>
 </div>
 
-
-    @include('layouts.footer')
-    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Custom JS -->
-    <script src="{{ asset('js/main.js') }}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-
 </body>
 </html>

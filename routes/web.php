@@ -58,9 +58,10 @@ Route::get('/callback/google', [SocialAuthController::class, 'handleGoogleCallba
 
 
 Route::middleware([User::class])->group(function () {
-    Route::get('/home', [KamarDepanController::class, 'home'])->name('home');
+    Route::get('/home', [WelcomeController::class, 'home'])->name('home');
     Route::get('/profile', fn() => view('user.profile'))->name('profile');
     Route::post('/profile/update', [AuthController::class, 'updateName'])->name('profile.update');
+
 });
 
 
@@ -71,8 +72,7 @@ Route::get('/admin-kamardepan', [KamarDepanController::class, 'index'])->name('a
 Route::post('/admin-kamardepan', [KamarDepanController::class, 'store'])->name('admin.kamarDepanStore');
 Route::get('/admin-kamarDalam', [KamarDalamController::class, 'create'])->name('admin.kamarDalam');
 Route::post('/admin-kamarDalam/simpanKamar', [KamarDalamController::class, 'store'])->name('admin.kamarDalamStore');
-// Route::post('/admin-kamarDalam/edit/{nomorKamar}', [KamarDalamController::class, 'editKamar'])->name('edit.kamarDalam');
-Route::post('/admin-kamarDalam/addPhoto{nomorKamar}', [KamarDalamController::class, 'addPhoto'])->name('admin.addPhoto');
+Route::post('/admin-kamarDalam/addPhoto/{nomorKamar}', [KamarDalamController::class, 'addPhoto'])->name('admin.addPhoto');
 
 
 
@@ -82,7 +82,6 @@ Route::get('/admin-booking', fn () => view('admin.admin-booking'))->name('admin.
 // Route::resource('kamar', KamarDepanController::class)->only(['index', 'show']);
 Route::get('/detail-kamar/{jenisKamar}', [KamarDalamController::class, 'kamarDalam'])->name('detail.kamar');
 Route::get('/booking/{nomorKamar}', [BookingKamarController::class, 'index'])->name('booking.kamar');
-Route::post('/transaksi', [TransaksiController::class, 'index'])->name('transaksi');
 
-
-
+Route::post('/transaksi/{kamarId}', [TransaksiController::class, 'show'])->name('transaksi');
+Route::post('/transaksi/confirm', [TransaksiController::class, 'confirm'])->name('transaksi.confirm');

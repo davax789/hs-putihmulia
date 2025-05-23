@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('kamarDalam', function (Blueprint $table) {
             $table->id();
             $table->string('jenisKamar');
-            $table->string('nomorKamar');
+            $table->string('nomorKamar')->unique();
             $table->text('deskripsi');
             $table->string('status')->default('tersedia');
             $table->integer('hargaPermalam');
