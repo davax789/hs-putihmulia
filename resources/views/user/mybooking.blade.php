@@ -16,8 +16,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Custom CSS -->
     <link href="{{ asset('css/style.css') }}" rel="stylesheet">
-
-    <style>
+        <style>
         .sidebar-item {
     text-decoration: none;
     color: #333;
@@ -58,42 +57,40 @@
                 </div>
 
                 <!-- Main Content -->
-            <div class="col-md-8">
+<div class="col-md-8">
+    <div class="card shadow-sm">
+        <div class="card-header bg-white">
+            <h5 class="mb-0">My Bookings</h5>
+        </div>
+        <div class="card-body">
+            @if($myBookings->isEmpty())
+                <p class="text-muted">You have no booking history yet.</p>
+            @else
+                <ul class="list-group list-group-flush">
+                    @foreach($myBookings as $booking)
+                        <li class="list-group-item d-flex align-items-start">
+                            <!-- Tampilkan gambar -->
+                            @if($booking->kamar && $booking->kamar->photo_utama)
+                            <img src="{{ asset('storage/' . $booking->kamar->photo_utama) }}" alt="Kamar {{ $booking->noKamar }}" class="img-fluid me-3" style="width: 110px; height: 110px; object-fit: cover;">
 
-                <div id="profileSection">
-                    <div class="profile-header">
-                        <div class="profile-info d-flex align-items-center">
-                            <img src="{{ asset('images/avatar.png') }}" alt="Profile Avatar" class="rounded-circle" width="80" height="80">
-                            <div class="ms-3">
-                                <h5>{{ Auth::user()->name }}</h5>
-                                <p class="text-muted">{{ Auth::user()->email }}</p>
+                            @else
+                                <img src="{{ asset('images/default-room.jpg') }}" alt="Default Kamar" class="img-fluid me-3" style="max-width: 100px; max-height: 100px; object-fit: cover;">
+                            @endif
+                            <div>
+                                <strong>Nama Kamar:</strong> {{ $booking->noKamar }} <br>
+                                <strong>Kode Transaksi:</strong> {{ $booking->kode_transaksi }} <br>
+                                <strong>Total Pembayaran:</strong> Rp{{ number_format($booking->total_harga, 0, ',', '.') }} <br>
+                                <strong>Status:</strong> {{ $booking->status }}
                             </div>
-                        </div>
-                    </div>
+                        </li>
+                    @endforeach
+                </ul>
+            @endif
+        </div>
+    </div>
+</div>
+    </section>
 
-                    @if(session('success'))
-                        <div class="alert alert-success mt-2">{{ session('success') }}</div>
-                    @endif
-
-                    <form action="{{ route('profile.update') }}" method="POST">
-                        @csrf
-                        <div class="row mt-4">
-                            <div class="col-md-6">
-                                <label for="fullName" class="form-label">Full Name</label>
-                                <input type="text" class="form-control" name="name" id="fullName" value="{{ Auth::user()->name }}" placeholder="Your Full Name" required>
-                            </div>
-                            <div class="col-md-6">
-                                <label for="email" class="form-label">Email</label>
-                                <input type="text" class="form-control" value="{{ Auth::user()->email }}" disabled>
-                            </div>
-                            <div class="col-12 mt-3">
-                                <button type="submit" class="btn btn-primary">Simpan</button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-
-</section>
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Custom JS -->

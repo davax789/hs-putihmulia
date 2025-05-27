@@ -79,15 +79,6 @@
                     </div>
                     <div class="row mb-3">
                         <div class="col-md-12">
-                            <label for="nomor_telepon" class="form-label">Nomor Telepon</label>
-                            <div class="input-group">
-                                <span class="input-group-text">+62</span>
-                                <input type="text" class="form-control" id="nomor_telepon">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-md-12">
                             <label for="kebangsaan" class="form-label">Kebangsaan</label>
                             <input type="text" class="form-control" id="kebangsaan" value="INDONESIA" disabled>
                         </div>
@@ -128,7 +119,7 @@
             <small class="text-muted">Jumlah biaya:</small>
             <strong>Rp {{ number_format($total_harga, 0, ',', '.') }}</strong>
         </div>
-        <form action="{{ route('transaksi.confirm') }}" method="POST" class="mt-2">
+        <form action="{{ route('pembayaran') }}" method="POST" class="mt-2">
             @csrf
             <input type="hidden" name="kamar_id" value="{{ $kamar->id }}">
             <input type="hidden" name="check_in" value="{{ $check_in }}">

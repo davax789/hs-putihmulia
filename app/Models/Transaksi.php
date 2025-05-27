@@ -39,4 +39,5 @@ class Transaksi extends Model
     {
         return $this->belongsTo(KamarDalam::class, 'noKamar', 'nomorKamar');
     }
+
 }

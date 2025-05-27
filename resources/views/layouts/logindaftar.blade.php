@@ -1,3 +1,5 @@
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
     <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
         <div class="container">
             <a class="navbar-brand" href="#">
@@ -61,8 +63,13 @@
                             <input type="email" class="form-control" id="loginEmail" name="email" value="{{ old('email') }}" required>
                         </div>
                         <div class="mb-3">
-                            <label for="loginPassword" class="form-label">Password</label>
+                        <label for="loginPassword" class="form-label">Password</label>
+                        <div class="input-group">
                             <input type="password" class="form-control" id="loginPassword" name="password" required>
+                            <button class="btn btn-outline-secondary toggle-password" type="button" data-target="loginPassword">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        </div>
                         </div>
                         <button type="submit" class="btn btn-primary btn-rounded w-100">Login</button>
                         <p class="text-center mt-3">
@@ -107,14 +114,27 @@
                             <label for="registerEmail" class="form-label">Email</label>
                             <input type="email" class="form-control" id="registerEmail" name="email" required>
                         </div>
-                        <div class="mb-3">
-                            <label for="registerPassword" class="form-label">Password</label>
-                            <input type="password" class="form-control" id="registerPassword" name="password" required>
+                       <div class="mb-3">
+                        <label for="registerPassword" class="form-label">Password</label>
+                        <div class="input-group">
+                        <input type="password" class="form-control" id="registerPassword" name="password" required>
+                        <button class="btn btn-outline-secondary toggle-password" type="button" data-target="registerPassword">
+                        <i class="fas fa-eye"></i>
+                        </button>
                         </div>
-                        <div class="mb-3">
-                            <label for="registerPasswordConfirmation" class="form-label">Konfirmasi Password</label>
-                            <input type="password" class="form-control" id="registerPasswordConfirmation" name="password_confirmation" required>
                         </div>
+
+                        <div class="mb-3">
+                     <label for="registerPasswordConfirmation" class="form-label">Konfirmasi Password</label>
+                    <div class="input-group">
+                    <input type="password" class="form-control" id="registerPasswordConfirmation" name="password_confirmation" required>
+                    <button class="btn btn-outline-secondary toggle-password" type="button" data-target="registerPasswordConfirmation">
+                    <i class="fas fa-eye"></i>
+                    </button>
+                    </div>
+                    </div>
+
+
                         <button type="submit" class="btn btn-primary btn-rounded w-100">Daftar</button>
                         <p class="text-center mt-3">
                             Sudah punya akun? <a href="#" class="text-primary" data-bs-toggle="modal" data-bs-target="#authModal" data-bs-dismiss="modal">Login di sini</a>
@@ -124,3 +144,22 @@
             </div>
         </div>
     </div>
+<script>
+    document.querySelectorAll('.toggle-password').forEach(button => {
+        button.addEventListener('click', function () {
+            const targetId = this.getAttribute('data-target');
+            const input = document.getElementById(targetId);
+            const icon = this.querySelector('i');
+
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        });
+    });
+</script>

@@ -4,6 +4,8 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookingKamarController;
 use App\Http\Controllers\KamarDalamController;
 use App\Http\Controllers\KamarDepanController;
+use App\Http\Controllers\MyBookingController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\SocialAuthController;
 use App\Http\Controllers\TransaksiController;
 use App\Http\Controllers\WelcomeController;
@@ -11,6 +13,7 @@ use App\Http\Middleware\Admin;
 use App\Http\Middleware\RedirectIfAuthenticated;
 use App\Http\Middleware\User;
 use App\Http\Middleware\UserAdmin;
+use App\Models\MyBooking;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
@@ -59,7 +62,7 @@ Route::get('/callback/google', [SocialAuthController::class, 'handleGoogleCallba
 
 Route::middleware([User::class])->group(function () {
     Route::get('/home', [WelcomeController::class, 'home'])->name('home');
-    Route::get('/profile', fn() => view('user.profile'))->name('profile');
+    Route::get('/profile', [AuthController::class, 'profile'])->name('profile');
     Route::post('/profile/update', [AuthController::class, 'updateName'])->name('profile.update');
 
 });
@@ -83,5 +86,9 @@ Route::get('/admin-booking', fn () => view('admin.admin-booking'))->name('admin.
 Route::get('/detail-kamar/{jenisKamar}', [KamarDalamController::class, 'kamarDalam'])->name('detail.kamar');
 Route::get('/booking/{nomorKamar}', [BookingKamarController::class, 'index'])->name('booking.kamar');
 
-Route::post('/transaksi/{kamarId}', [TransaksiController::class, 'show'])->name('transaksi');
-Route::post('/transaksi/confirm', [TransaksiController::class, 'confirm'])->name('transaksi.confirm');
+Route::match(['get', 'post'], '/transaksi/{kamarId}', [TransaksiController::class, 'show'])->name('transaksi');
+Route::post('/pembayaran', [PaymentController::class, 'checkout'])->name('pembayaran');
+Route::post('/pembayaran/confirm', [PaymentController::class, 'confirm'])->name('payment.confirm');
+
+Route::get('/my-booking', [MyBookingController::class, 'index'])->name('myBookings');
+Route::get('/order/success/{transaksi}', [MyBookingController::class, 'orderSuccess'])->name('order.success');

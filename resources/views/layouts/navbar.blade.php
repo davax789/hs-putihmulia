@@ -52,6 +52,8 @@
                             </li>
                             <li><a class="dropdown-item" href="{{ route('profile') }}"><i class="fa fa-user me-2"></i> Profil</a></li>
                             <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="{{ route('myBookings') }}"><i class="fa-solid fa-cart-shopping"></i>&nbsp;&nbsp;My Booking</a></li>
+                            <li><hr class="dropdown-divider"></li>
                             <li>
                                 <form action="{{ route('logout') }}" method="POST" class="m-0">
                                     @csrf
@@ -64,3 +66,5 @@
             </div>
         </div>
     </nav>
+
+

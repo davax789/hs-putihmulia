@@ -47,34 +47,7 @@ $total_harga = $diffDays * $hargaPermalam;
 
 
         return view('user.user-transaksi', compact('kamar', 'check_in', 'check_out', 'total_harga'));
-
+        
 }
-    /**
-     */
-    public function confirm(Request $request)
-    {
-        // Validasi input dari form konfirmasi
-        $request->validate([
-            'kamar_id' => 'required|exists:kamars,id',
-            'check_in' => 'required|date',
-            'check_out' => 'required|date|after:check_in',
-            'jumlah_kamar' => 'required|integer|min:1',
-            'jumlah_tamu' => 'required|integer|min:1',
-            'total_harga' => 'required|numeric|min:0',
-        ]);
-
-        // Simpan transaksi ke database
-        $transaksi = new Transaksi();
-        $transaksi->kamar_id = $request->kamar_id;
-        $transaksi->check_in = $request->check_in;
-        $transaksi->check_out = $request->check_out;
-        $transaksi->jumlah_kamar = $request->jumlah_kamar;
-        $transaksi->jumlah_tamu = $request->jumlah_tamu;
-        $transaksi->total_harga = $request->total_harga;
-        $transaksi->save();
-
-        // Redirect dengan pesan sukses
-        return redirect()->route('transaksi.create')->with('success', 'Pemesanan berhasil dikonfirmasi!');
-    }
 }
 ?>

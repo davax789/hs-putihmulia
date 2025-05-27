@@ -330,12 +330,22 @@ html, body {
                                  Rp {{ number_format($kamar->hargaPermalam, 0, ',', '.') }}
                             </span>
                         </p>
-<form action="{{ route('transaksi', $kamar->id) }}" method="post" class="booking-form" data-kamar-id="{{ $kamar->id }}">
+@guest
+<!-- Jika belum login, munculkan tombol untuk buka modal login -->
+<button type="button" class="btn btn-danger w-100" data-bs-toggle="modal" data-bs-target="#authModal">
+    PESAN SEKARANG
+</button>
+@else
+<!-- Jika sudah login, tampilkan form -->
+<form action="{{ route('transaksi', $kamar->id) }}" method="POST" class="booking-form" data-kamar-id="{{ $kamar->id }}">
     @csrf
     <input type="hidden" name="check_in" class="checkin-hidden" id="checkin-hidden-{{ $kamar->id }}">
     <input type="hidden" name="check_out" class="checkout-hidden" id="checkout-hidden-{{ $kamar->id }}">
     <button type="submit" class="book-now btn btn-danger w-100">PESAN SEKARANG</button>
 </form>
+@endguest
+
+
                          </div>
                         </div>
     @endforeach
