@@ -49,8 +49,7 @@
         <i class="fas fa-calendar-check me-2"></i>Recent Bookings
       </h5>
       <div class="mb-3">
-        <input type="text" id="searchInput" class="form-control" placeholder="Search by Customer...">
-      </div>
+<input type="text" id="searchInput" class="form-control mb-3" placeholder="Cari nama user..." value="{{ request('search') }}">
       <div class="table-responsive">
         <table class="table table-hover align-middle" id="bookingTable">
           <thead class="table-light">
@@ -63,21 +62,15 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>1</td>
-              <td>db</td>
-              <td><span class="badge bg-primary">Deluxe</span></td>
-              <td>2025-05-01</td>
-              <td>2025-05-03</td>
-            </tr>
-            <tr>
-              <td>2</td>
-              <td>Budi</td>
-              <td><span class="badge bg-success">Standard</span></td>
-              <td>2025-05-02</td>
-              <td>2025-05-04</td>
-            </tr>
-            <!-- Tambahkan baris lain di sini -->
+                @foreach ($dashboard as $data )
+                <tr>
+                  <td>{{ $data->id }}</td>
+                    <td>{{ $data->user->name }}</td>
+                  <td><span class="badge bg-primary">{{ $data->noKamar }}</span></td>
+                  <td>{{ $data->check_in }}</td>
+                  <td>{{ $data->check_out }}</td>
+                </tr>
+                @endforeach    <!-- Tambahkan baris lain di sini -->
           </tbody>
         </table>
       </div>
@@ -86,6 +79,20 @@
 </div>
 <script src="{{ asset('js/main.js') }}"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+let timeout = null;
+
+document.getElementById('searchInput').addEventListener('keyup', function () {
+    clearTimeout(timeout);
+
+    let search = this.value;
+
+    timeout = setTimeout(function () {
+        // Redirect ke URL dengan query string pencarian
+        window.location.href = `?search=${encodeURIComponent(search)}`;
+    }, 500); // Tunggu 500ms setelah mengetik berhenti
+});
+</script>
 
 </body>
-</html>..
+</html>

@@ -45,8 +45,9 @@
             <th>Photo Room</th>
             <th>Jenis Kamar</th>
             <th>Nama Kamar</th>
-            <th>Harga /Malam</th>
+            <th>Harga</th>
             <th>Deskripsi</th>
+            <th>Status</th>
             <th>Action</th>
         </tr>
     </thead>
@@ -63,6 +64,13 @@
 <td class="text-wrap">
     {{ $kamar->deskripsi }}
 </td>
+<td>
+    <span class="badge {{ $kamar->status == 'tersedia' ? 'bg-success' : 'bg-danger' }}">
+        {{ $kamar->status }}
+    </span>
+</td>
+
+
     <td>
         <button type="button" class="btn btn-primary btn-sm me-1"
                 data-bs-toggle="modal" data-bs-target="#addPhoto{{ $kamar->id }}">

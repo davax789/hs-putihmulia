@@ -23,6 +23,7 @@ public function up()
         $table->string('status')->default('pending');
         $table->dateTime('tanggal_transaksi')->nullable();
         $table->dateTime('tanggal_pembayaran')->nullable();
+        $table->string('acceptedby')->nullable();
         $table->timestamps();
 
         $table->foreign('id_user')->references('id')->on('users')->onDelete('cascade');

@@ -40,63 +40,51 @@
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>1</td>
-                <td>Andi</td>
-                <td><span class="badge bg-primary">Deluxe</span></td>
-                <td>2025-05-01</td>
-                <td>2025-05-03</td>
-                <td><span class="badge bg-success">Confirmed</span></td>
-                <td>
-                  <div class="dropdown">
-                    <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                      Kelola
-                    </button>
-                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton1">
-                      <li>
-                        <button class="dropdown-item text-danger" data-bs-toggle="modal" data-bs-target="#rejectModal">
-                          <i class="fas fa-times me-2"></i> Tolak
-                        </button>
-                      </li>
-                      <li>
-                        <button class="dropdown-item text-success" data-bs-toggle="modal" data-bs-target="#acceptModal">
-                          <i class="fas fa-check me-2"></i> Terima
-                        </button>
-                      </li>
-                    </ul>
-                  </div>
-                </td>
-                <td>Admin 1</td>
-              </tr>
-              <tr>
-                <td>2</td>
-                <td>Ela</td>
-                <td><span class="badge bg-primary">Deluxe</span></td>
-                <td>2025-05-01</td>
-                <td>2025-05-03</td>
-                <td><span class="badge bg-success">Confirmed</span></td>
-                <td>
-                  <div class="dropdown">
-                    <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                      Kelola
-                    </button>
-                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton1">
-                      <li>
-                        <button class="dropdown-item text-danger" data-bs-toggle="modal" data-bs-target="#rejectModal">
-                          <i class="fas fa-times me-2"></i> Tolak
-                        </button>
-                      </li>
-                      <li>
-                        <button class="dropdown-item text-success" data-bs-toggle="modal" data-bs-target="#acceptModal">
-                          <i class="fas fa-check me-2"></i> Terima
-                        </button>
-                      </li>
-                    </ul>
-                  </div>
-                </td>
-                <td>Admin 2</td>
-              </tr>
-            </tbody>
+    @forelse ($orders as $index => $trx)
+    <tr>
+        <td>{{ $index + 1 }}</td>
+        <td>{{ $trx->user->name ?? '-' }}</td>
+        <td><span class="badge bg-primary">{{ $trx->kamar->nomorKamar ?? '-' }}</span></td>
+        <td>{{ $trx->check_in }}</td>
+        <td>{{ $trx->check_out }}</td>
+
+        <td>
+  @if(is_null($trx->acceptedby) || $trx->acceptedby == '')
+    <span class="badge bg-warning text-dark">Pending</span>
+  @else
+    <span class="badge bg-success">Accepted</span>
+  @endif
+</td>
+
+
+        </td>
+        <td>
+            <div class="dropdown">
+                <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                    Kelola
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end">
+<li>
+    <form action="{{ route('orders.accept', $trx->id) }}" method="POST" onsubmit="return confirm('Yakin terima transaksi ini?')">
+        @csrf
+        <button type="submit" class="dropdown-item text-success">
+            <i class="fas fa-check me-2"></i> Terima
+        </button>
+    </form>
+</li>
+
+                </ul>
+            </div>
+        </td>
+        <td>{{ $trx->admin->name ?? '-' }}</td>
+    </tr>
+    @empty
+    <tr>
+        <td colspan="8" class="text-center">Tidak ada transaksi.</td>
+    </tr>
+    @endforelse
+</tbody>
+
           </table>
         </div>
 

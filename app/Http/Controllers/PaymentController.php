@@ -3,21 +3,15 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Models\KamarDalam;
 use App\Models\Transaksi;
-use Midtrans\Snap;
-use Midtrans\Config;
 use Carbon\Carbon;
-use Auth;
-use Midtrans\Notification;
-use Exception;
-use Illuminate\Support\Facades\Log;
-
+use Midtrans\Config;
+use Midtrans\Snap;
 
 class PaymentController extends Controller
 {
-
-
 public function checkout(Request $request)
 {
     $request->validate([
@@ -100,44 +94,44 @@ public function checkout(Request $request)
 
 
 
+    /**
+     * Handle Midtrans notification callback
+     */
 public function notification(Request $request)
 {
-    Log::info('Midtrans Notification:', $request->all());
+    $serverKey = config('midtrans.server_key');
+    $hashed = hash("sha512", $request->order_id . $request->status_code . $request->gross_amount . $serverKey);
 
-    $transactionStatus = $request->input('transaction_status');
-    $orderId = $request->input('order_id');
-    $paymentType = $request->input('payment_type'); // ambil metode pembayaran dari notifikasi
+    if ($hashed == $request->signature_key) {
+        $transaksi = Transaksi::where('kode_transaksi', $request->order_id)->first();
 
-    $transaksi = Transaksi::where('kode_transaksi', $orderId)->first();
+        if ($transaksi) {
+            $kamar = KamarDalam::where('nomorKamar', $transaksi->noKamar)->first();
 
-    if (!$transaksi) {
-        Log::error('Transaksi tidak ditemukan untuk order_id: ' . $orderId);
-        return response()->json(['status' => 'error'], 404);
+            if ($request->transaction_status == 'capture' || $request->transaction_status == 'settlement') {
+                $transaksi->update([
+                    'status' => 'success',
+                    'tanggal_pembayaran' => now(),
+                ]);
+
+                if ($kamar) {
+                    $kamar->update(['status' => 'tidak tersedia']);
+                }
+
+            } elseif ($request->transaction_status == 'pending') {
+                $transaksi->update(['status' => 'pending']);
+
+            } elseif (in_array($request->transaction_status, ['deny', 'expire', 'cancel'])) {
+                $transaksi->update(['status' => 'failed']);
+
+                if ($kamar) {
+                    $kamar->update(['status' => 'tersedia']);
+                }
+            }
+        }
     }
 
-    switch ($transactionStatus) {
-        case 'settlement':
-        case 'capture':
-            $transaksi->status = 'PAID';
-            $transaksi->tanggal_pembayaran = now();
-            break;
-        case 'pending':
-            $transaksi->status = 'PENDING';
-            break;
-        case 'deny':
-        case 'cancel':
-        case 'expire':
-            $transaksi->status = 'FAILED';
-            break;
-    }
-
-    $transaksi->metode_pembayaran = $paymentType;
-
-    $transaksi->save();
-
-    Log::info("Transaksi {$orderId} diupdate ke status {$transaksi->status} dan metode pembayaran {$paymentType}");
-
-    return response()->json(['status' => 'success'], 200);
+    return response('OK', 200);
 }
 
 

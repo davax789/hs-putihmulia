@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookingKamarController;
 use App\Http\Controllers\KamarDalamController;
@@ -68,9 +69,10 @@ Route::middleware([User::class])->group(function () {
 });
 
 
-Route::middleware([Admin::class])->group(function () {
-Route::get('/admin-dashboard', fn () => view('admin.admin-dashboard'))->name('admin.dashboard');
-Route::get('/admin-order', fn () => view('admin.admin-order'))->name('admin.order');
+Route::middleware([Admin::class])->group(function (): void {
+Route::get('/admin-dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
+Route::get('/admin-order', [AdminController::class, 'orders'])->name('admin.order');
+Route::post('/admin-orders/{id}/accept', [AdminController::class, 'accept'])->name('orders.accept');
 Route::get('/admin-kamardepan', [KamarDepanController::class, 'index'])->name('admin.kamarDepan');
 Route::post('/admin-kamardepan', [KamarDepanController::class, 'store'])->name('admin.kamarDepanStore');
 Route::get('/admin-kamarDalam', [KamarDalamController::class, 'create'])->name('admin.kamarDalam');

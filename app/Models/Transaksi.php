@@ -40,4 +40,10 @@ class Transaksi extends Model
         return $this->belongsTo(KamarDalam::class, 'noKamar', 'nomorKamar');
     }
 
+    public function admin()
+{
+    return $this->belongsTo(User::class, 'acceptedby');
+}
+
+
 }
