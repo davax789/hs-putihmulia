@@ -140,7 +140,7 @@ html, body {
   overflow-x: hidden;
   max-width: 100vw;
 }
-
+~
 }
 
     </style>
@@ -522,5 +522,23 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 </script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Tangkap semua gambar dengan class 'zoomable-img'
+        const zoomableImages = document.querySelectorAll('.zoomable-img');
+
+        zoomableImages.forEach(img => {
+            img.addEventListener('click', function () {
+                const modalImg = document.getElementById('modalImage');
+                modalImg.src = this.src;
+
+                // Tampilkan modal Bootstrap
+                const imageModal = new bootstrap.Modal(document.getElementById('imageModal'));
+                imageModal.show();
+            });
+        });
+    });
+</script>
+
 </body>
 </html>

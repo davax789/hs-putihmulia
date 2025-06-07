@@ -7,8 +7,8 @@
       <i class="fas fa-door-open me-2"></i> Rooms
     </a>
     <div class="collapse ms-3" id="collapseRooms">
-      <a class="d-block text-white" href="{{ route('admin.kamarDepan') }}">Kamar Depan</a>
-      <a class="d-block text-white" href="{{ route('admin.kamarDalam') }}">Kamar Dalam</a>
+      <a class="d-block text-white" href="{{ route('admin.kamardepan') }}">Kamar Depan</a>
+      <a class="d-block text-white" href="{{ route('admin.kamardalam') }}">Kamar Dalam</a>
     </div>
   </div>
   <a href="{{ route('admin.booking') }}"><i class="fas fa-users me-2"></i> Booking</a>

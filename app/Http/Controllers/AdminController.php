@@ -33,7 +33,7 @@ public function orders()
 public function accept($id)
 {
 $order = Transaksi::findOrFail($id);
-$order->acceptedby = Auth::id(); // Simpan ID user yang sedang login
+$order->acceptedby = Auth::id();
 $order->save();
 
     return redirect()->back()->with('success', 'Order berhasil diterima.');

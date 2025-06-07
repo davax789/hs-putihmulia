@@ -60,9 +60,12 @@
             <td>{{ $kamar->hargaPermalam }}</td>
             <td class="description">{{ $kamar->deskripsi }}</td>
             <td>
-                <button class="btn btn-warning btn-sm">Add</button>
-                <button class="btn btn-primary btn-sm">Edit</button>
-                <button class="btn btn-danger btn-sm">Delete</button>
+                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button>
+                <form action="{{ route('admin.kamardepan.destroy', $kamar->id) }}" method="POST" style="display:inline-block;">
+    @csrf
+    @method('DELETE')
+    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Yakin ingin menghapus kamar ini?')">Delete</button>
+</form>
             </td>
         </tr>
         @endforeach
@@ -85,7 +88,7 @@
         {{ session('success') }}
     </div>
 @endif
-      <form action="{{ route('admin.kamarDepanStore') }}" method="POST" enctype="multipart/form-data">
+      <form action="{{ route('admin.kamardepanStore') }}" method="POST" enctype="multipart/form-data">
         @csrf
         <div class="modal-header">
           <h5 class="modal-title" id="addRoomModalLabel">Add New Room</h5>
@@ -129,59 +132,64 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form>
+                   @if (session('success'))
+                <div class="alert alert-success">
+                    {{ session('success') }}
+                </div>
+            @endif
+
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul class="mb-0">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
+            <div class="card shadow-sm">
+                <div class="card-body">
+                            @isset($kamar)
+                    <form action="{{ route('admin.kamardepan.update', $kamar->id) }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        @method('PUT')
+
                         <div class="mb-3">
-                            <label for="editRoomNumber" class="form-label">Photo Room</label>
-                            <input type="text" class="form-control" id="editRoomNumber"
-                                placeholder="Enter room number">
+                            <label for="jenisKamar" class="form-label">Jenis Kamar</label>
+                            <input type="text" name="jenisKamar" class="form-control" value="{{ old('jenisKamar', $kamar->jenisKamar) }}" required>
                         </div>
+
                         <div class="mb-3">
-                            <label for="editRoomType" class="form-label">Room Type</label>
-                            <input type="text" class="form-control" id="editRoomType"
-                                placeholder="Enter room type">
+                            <label for="hargaPermalam" class="form-label">Harga Per Malam</label>
+                            <input type="number" name="hargaPermalam" class="form-control" value="{{ old('hargaPermalam', $kamar->hargaPermalam) }}" required>
                         </div>
+
                         <div class="mb-3">
-                            <label for="editRoomPrice" class="form-label">Price/Night</label>
-                            <input type="number" class="form-control" id="editRoomPrice"
-                                placeholder="Enter price per night">
+                            <label for="deskripsi" class="form-label">Deskripsi</label>
+                            <textarea name="deskripsi" class="form-control" rows="3" required>{{ old('deskripsi', $kamar->deskripsi) }}</textarea>
                         </div>
+
                         <div class="mb-3">
-                            <label for="editRoomStatus" class="form-label">Status</label>
-                            <select class="form-select" id="editRoomStatus">
-                                <option selected>Choose status</option>
-                                <option value="available">Available</option>
-                                <option value="booked">Booked</option>
-                            </select>
+                            <label for="photoKamar" class="form-label">Foto Kamar</label>
+                            <input type="file" name="photoKamar" class="form-control">
+                            @if ($kamar->photoKamar)
+                                <img src="{{ asset('storage/' . $kamar->photoKamar) }}" alt="Current Photo" class="mt-2" style="width: 150px;">
+                            @endif
                         </div>
-                        <div class="mb-3">
-                            <label for="editRoomImages" class="form-label">Room Images
-                            </label>
-                            <input type="file" class="form-control" id="editRoomImages" multiple
-                                accept="image/*">
+
+                        <div class="d-flex justify-content-between">
+                            <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
                         </div>
-                        <button type="submit" class="btn btn-primary">Save
-                            Changes</button>
+
                     </form>
+                    @endisset
                 </div>
             </div>
+
         </div>
     </div>
-    <!-- Modal for Delete Confirmation -->
-    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="deleteModalLabel">Delete Room</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <p>Are you sure you want to delete this room? This action cannot be
-                        undone.</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-danger" onclick="deleteRoom()">Confirm
-                        Delete</button>
+</div>
                 </div>
             </div>
         </div>
@@ -200,6 +208,7 @@
             }, 3000);
         }
     });
+    </script>
 </body>
 
 </html>

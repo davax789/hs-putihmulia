@@ -10,12 +10,12 @@ class KamarDepanController extends Controller
 {
 public function index() {
     $kamars = KamarDepan::all();
-    return view('admin.admin-kamarDepan', compact('kamars'));
+    return view('admin.admin-kamardepan', compact('kamars'));
 }
 
   public function create() {
     $kamar = KamarDepan::all();
-    return view('admin.admin-kamarDepan', compact('kamar'));
+    return view('admin.admin-kamardepan', compact('kamar'));
 }
 
 public function store(Request $request)
@@ -44,6 +44,13 @@ public function store(Request $request)
 }
 
 
+//     public function kamarDepan($jenisKamar)
+// {
+//     $kamars = KamarDepan::where('jenisKamar', $jenisKamar)
+//                 ->get();
+
+//     return view('user.detail-kamar', compact('kamars', 'jenisKamar'));
+// }
 
     public function update(Request $request, $id) {
         $kamar = KamarDepan::findOrFail($id);
@@ -60,22 +67,19 @@ public function store(Request $request)
 
         $kamar->update($data);
 
-        return redirect()->route('kamar.index')->with('success', 'Data berhasil diperbarui.');
+
+        return redirect()->route('admin.kamardepan')->with('success', 'Data berhasil diperbarui.');
+
     }
 
     public function destroy($id) {
         $kamar = KamarDepan::findOrFail($id);
         $kamar->delete();
 
-        return redirect()->route('kamar.index')->with('success', 'Data berhasil dihapus.');
+
+        return redirect()->route('admin.kamardepan')->with('success', 'Data berhasil dihapus.');
+
     }
 
-    public function kamarDepan($jenisKamar)
-{
-    $kamars = KamarDepan::where('jenisKamar', $jenisKamar)
-                ->get();
-
-    return view('user.detail-kamar', compact('kamars', 'jenisKamar'));
-}
 }
 

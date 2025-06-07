@@ -8,6 +8,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
     <link href="{{ asset('css/main.css') }}" rel="stylesheet">
+
 </head>
 
 <body>
@@ -70,7 +71,6 @@
     </span>
 </td>
 
-
     <td>
         <button type="button" class="btn btn-primary btn-sm me-1"
                 data-bs-toggle="modal" data-bs-target="#addPhoto{{ $kamar->id }}">
@@ -80,10 +80,11 @@
                 data-bs-toggle="modal" data-bs-target="#editModal">
             <i class="bi bi-pencil-square"></i> Edit
         </button>
-        <button type="button" class="btn btn-danger btn-sm"
-                data-bs-toggle="modal" data-bs-target="#deleteFotoModal">
-            <i class="bi bi-trash"></i> Delete
-        </button>
+    <form action="{{ route('admin.kamardalam.destroy', $kamar->id) }}" method="POST" style="display:inline-block;">
+    @csrf
+    @method('DELETE')
+    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Yakin ingin menghapus kamar ini?')">Delete</button>
+</form>
     </td>
 </tr>
         @endforeach
@@ -106,7 +107,7 @@
         {{ session('success') }}
     </div>
 @endif
-      <form action="{{ route('admin.kamarDalamStore') }}" method="POST" enctype="multipart/form-data">
+      <form action="{{ route('admin.kamardalamStore') }}" method="POST" enctype="multipart/form-data">
         @csrf
         <div class="modal-header">
           <h5 class="modal-title" id="addRoomModalLabel">Add New Room</h5>
@@ -164,28 +165,74 @@
 </div>
 @endforeach
 
+    <!-- Modal Edit -->
+<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
 
-
-    <!-- Modal for Delete Confirmation -->
-    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="deleteModalLabel">Delete Room</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <p>Are you sure you want to delete this room? This action cannot be
-                        undone.</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-danger" onclick="deleteRoom()">Confirm
-                        Delete</button>
-                </div>
+            <div class="modal-header">
+                <h5 class="modal-title" id="editModalLabel">Edit Data Kamar</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
+
+            <div class="modal-body">
+            @isset($kamar)
+                <form action="{{ route('admin.kamardalam.update', $kamar->id) }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    @method('PUT')
+          {{-- Jenis Kamar --}}
+          <div class="mb-3">
+            <label for="jenisKamar{{ $kamar->id }}" class="form-label">Jenis Kamar</label>
+            <input type="text" name="jenisKamar" id="jenisKamar{{ $kamar->id }}" class="form-control" value="{{ old('jenisKamar', $kamar->jenisKamar) }}" required>
+          </div>
+
+          {{-- Nomor Kamar --}}
+          <div class="mb-3">
+            <label for="nomorKamar{{ $kamar->id }}" class="form-label">Nomor Kamar</label>
+            <input type="text" name="nomorKamar" id="nomorKamar{{ $kamar->id }}" class="form-control" value="{{ old('nomorKamar', $kamar->nomorKamar) }}" required>
+          </div>
+
+          {{-- Harga Per Malam --}}
+          <div class="mb-3">
+            <label for="hargaPermalam{{ $kamar->id }}" class="form-label">Harga Per Malam</label>
+            <input type="number" name="hargaPermalam" id="hargaPermalam{{ $kamar->id }}" class="form-control" value="{{ old('hargaPermalam', $kamar->hargaPermalam) }}" required min="0">
+          </div>
+
+          {{-- Deskripsi --}}
+          <div class="mb-3">
+            <label for="deskripsi{{ $kamar->id }}" class="form-label">Deskripsi</label>
+            <textarea name="deskripsi" id="deskripsi{{ $kamar->id }}" class="form-control" rows="3" required>{{ old('deskripsi', $kamar->deskripsi) }}</textarea>
+          </div>
+
+          {{-- Upload Foto Kamar --}}
+          <div class="mb-3">
+            <label for="photo_path{{ $kamar->id }}" class="form-label">Foto Kamar (Maksimal 4 Gambar)</label>
+            <input type="file" name="photo_path[]" id="photo_path{{ $kamar->id }}" class="form-control" multiple accept="image/*" onchange="restrictFiles(this, 4)">
+            <small class="form-text text-muted">Pilih hingga 4 gambar.</small>
+          </div>
+
+          {{-- Status --}}
+          <div class="mb-3">
+            <label for="status{{ $kamar->id }}" class="form-label">Status Kamar</label>
+            <select name="status" id="status{{ $kamar->id }}" class="form-control" required>
+              <option value="tersedia" {{ old('status', $kamar->status) == 'tersedia' ? 'selected' : '' }}>Tersedia</option>
+              <option value="tidak Tersedia" {{ old('status', $kamar->status) == 'tidak Tersedia' ? 'selected' : '' }}>Tidak Tersedia</option>
+            </select>
+          </div>
+
         </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+          <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+        </div>
+      </form>
+      @endisset
+
     </div>
+  </div>
+</div>
+
     <!-- Bootstrap JS and Popper.js from CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
@@ -200,6 +247,15 @@
             }, 3000);
         }
     });
+</script>
+        <script>
+        function restrictFiles(input, maxFiles) {
+            if (input.files.length > maxFiles) {
+                alert('Maksimal ' + maxFiles + ' gambar aja, bro!');
+                input.value = ''; // Reset input kalo kebanyakan
+            }
+        }
+        </script>
 </body>
 
 </html>
