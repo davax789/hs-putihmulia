@@ -13,23 +13,19 @@ class KamarDalamController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-                $kamars = KamarDalam::all();
-                $kamar = KamarDepan::pluck('jenisKamar');
+public function index()
+{
+    $kamars = KamarDalam::all();
+    $kamarDepan = KamarDepan::pluck('jenisKamar');
+    $kamarDalam = KamarDalam::all();
 
-    return view('admin.admin-kamardalam', compact('kamars', 'kamar'));
-    }
+
+    return view('admin.admin-kamardalam', compact('kamars', 'kamarDepan','kamarDalam'));
+}
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
-    {
-        $kamarDepan = KamarDepan::all();
-        $kamarDalam = KamarDalam::all();
-    return view('admin.admin-kamardalam', compact('kamarDepan', 'kamarDalam'));
-    }
 
     /**
      * Store a newly created resource in storage.

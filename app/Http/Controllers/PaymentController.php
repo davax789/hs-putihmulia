@@ -14,11 +14,14 @@ class PaymentController extends Controller
 {
 public function checkout(Request $request)
 {
-    $request->validate([
-        'kamar_id' => 'required|exists:kamarDalam,id',
-        'check_in' => 'required|date',
-        'check_out' => 'required|date|after:check_in',
-    ]);
+$request->validate([
+    'kamar_id' => 'required|exists:kamarDalam,id',
+    'check_in' => 'required|date',
+    'check_out' => 'required|date|after:check_in',
+    'kebangsaan' => 'required|string|max:100',
+    'nohp' => $request->skip_kode_negara ? 'nullable' : 'required|string|max:20',
+    'kode_negara' => $request->skip_kode_negara ? 'nullable' : 'required|string|max:10',
+]);
 
     $user = Auth::user();
     $kamar = KamarDalam::findOrFail($request->kamar_id);
@@ -42,20 +45,23 @@ public function checkout(Request $request)
             'tanggal_transaksi' => now(),
         ]);
     } else {
-        // Buat transaksi baru jika belum ada transaksi pending untuk kamar ini
-        $kode_transaksi = time();
-        $transaksi = Transaksi::create([
-            'id_user' => $user->id,
-            'noKamar' => $kamar->nomorKamar,
-            'kode_transaksi' => $kode_transaksi,
-            'total_harga' => $total_harga,
-            'check_in' => $request->check_in,
-            'check_out' => $request->check_out,
-            'metode_pembayaran' => 'midtrans',
-            'status' => 'pending',
-            'tanggal_transaksi' => now(),
-            'snap_token' => null,
-        ]);
+$kode_transaksi = 'TRX-' . uniqid();
+$transaksi = Transaksi::create([
+    'id_user' => $user->id,
+    'noKamar' => $kamar->nomorKamar,
+    'kode_transaksi' => $kode_transaksi,
+    'total_harga' => $total_harga,
+    'check_in' => $request->check_in,
+    'check_out' => $request->check_out,
+    'metode_pembayaran' => 'midtrans',
+    'status' => 'pending',
+    'tanggal_transaksi' => now(),
+    'kebangsaan' => $request->kebangsaan,
+    'kode_negara' => $request->skip_kode_negara ? null : $request->kode_negara,
+    'nohp' => $request->skip_kode_negara ? null : $request->nohp,
+    'acceptedby' => null, // atau auth()->user()->name jika admin input
+]);
+
     }
 
     // Midtrans setup

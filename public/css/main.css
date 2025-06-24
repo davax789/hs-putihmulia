@@ -201,5 +201,14 @@ body {
     transition: opacity 0.5s ease-out;
   }
 
-
-
+.button_plus {
+  position: absolute;
+  top: 80px;
+  right: 30px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #fff;
+  border: 2px solid #095776;
+  z-index: 10;
+}

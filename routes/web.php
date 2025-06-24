@@ -50,11 +50,12 @@ Route::get('/admin-kamardepan', [KamarDepanController::class, 'index'])->name('a
 Route::post('/admin-kamardepan', [KamarDepanController::class, 'store'])->name('admin.kamardepanStore');
 Route::put('/admin-kamardepan/update/{id}', [KamarDepanController::class, 'update'])->name('admin.kamardepan.update');
 Route::delete('/admin-kamardepan/delete/{id}', [KamarDepanController::class, 'destroy'])->name('admin.kamardepan.destroy');
-Route::get('/admin-kamardalam', [KamarDalamController::class, 'create'])->name('admin.kamardalam');
+Route::get('/admin-kamardalam', [KamarDalamController::class, 'index'])->name('admin.kamardalam');
 Route::post('/admin-kamardalam/simpanKamar', [KamarDalamController::class, 'store'])->name('admin.kamardalamStore');
 Route::post('/admin-kamardalam/addPhoto/{nomorKamar}', [KamarDalamController::class, 'addPhoto'])->name('admin.addPhoto');
 Route::put('/admin-kamardalam/update/{id}', [KamarDalamController::class, 'update'])->name('admin.kamardalam.update');
 Route::delete('/admin-kamardalam/delete/{id}', [KamarDalamController::class, 'destroy'])->name('admin.kamardalam.destroy');
+Route::get('/laporan.transaksi', [AdminController::class, 'laporan'])->name('laporan.transaksi');
 
 Route::get('/admin-booking', fn () => view('admin.admin-booking'))->name('admin.booking');
 });

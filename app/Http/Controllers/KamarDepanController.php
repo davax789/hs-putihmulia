@@ -13,10 +13,6 @@ public function index() {
     return view('admin.admin-kamardepan', compact('kamars'));
 }
 
-  public function create() {
-    $kamar = KamarDepan::all();
-    return view('admin.admin-kamardepan', compact('kamar'));
-}
 
 public function store(Request $request)
 {

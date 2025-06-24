@@ -58,33 +58,85 @@
     <div class="container-custom">
         <div class="row">
             <!-- Form Detail Pemesan -->
-            <div class="col-md-8 mb-4">
-                <div class="card card-custom p-4">
-                    <h5 class="mb-3">Saya memesan untuk</h5>
-                    <div class="row mb-3">
-                        <div class="col-md-12">
-                            <label for="email" class="form-label">Email</label>
-                            <input type="email" class="form-control" id="email" value="{{ auth()->user()->email ?? '' }}" disabled>
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-md-2">
-                            <label for="title" class="form-label">Title</label>
-                            <input type="text" class="form-control" id="title" value="Mr" disabled>
-                        </div>
-                        <div class="col-md-5">
-                            <label for="nama_depan" class="form-label">Nama Lengkap</label>
-                            <input type="text" class="form-control" id="nama_depan" value="{{ auth()->user()->name ?? '' }}" disabled>
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-md-12">
-                            <label for="kebangsaan" class="form-label">Kebangsaan</label>
-                            <input type="text" class="form-control" id="kebangsaan" value="INDONESIA" disabled>
-                        </div>
-                    </div>
-                </div>
+<div class="col-md-8 mb-4">
+    <div class="card card-custom p-4">
+        <h5 class="mb-3">Saya memesan untuk</h5>
+
+        {{-- Email --}}
+        <div class="row mb-3">
+            <div class="col-md-12">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" id="email" value="{{ auth()->user()->email ?? '' }}" disabled>
             </div>
+        </div>
+
+        {{-- Title & Nama --}}
+        <div class="row mb-3">
+            <div class="col-md-5">
+                <label for="nama_depan" class="form-label">Nama Lengkap</label>
+                <input type="text" class="form-control" id="nama_depan" value="{{ auth()->user()->name ?? '' }}" disabled>
+            </div>
+        </div>
+
+        {{-- Kebangsaan (pilihan) --}}
+        <div class="row mb-3">
+            <div class="col-md-12">
+                <label for="kebangsaan" class="form-label">Kebangsaan</label>
+                <select class="form-select" id="kebangsaan" name="kebangsaan">
+                    <option value="Indonesia" selected>Indonesia</option>
+                    <option value="Abroad">Abroad</option>
+                </select>
+            </div>
+        </div>
+
+        {{-- No HP dengan kode negara --}}
+{{-- Nomor HP dengan opsi kode negara --}}
+<div class="row mb-3">
+    <div class="col-md-4">
+        <label for="kode_negara" class="form-label">Kode Negara</label>
+
+        <!-- Wrapper relatif agar posisi select tetap pada kotaknya -->
+        <div style="position: relative; width: 100%; max-width: 100px;">
+            <!-- Input tampilan kode -->
+            <input type="text" id="displayKode" class="form-control" readonly placeholder="+--">
+
+            <!-- Select disembunyikan tapi bisa diklik -->
+<select id="kode_negara" name="kode_negara" class="form-select"
+    style="position: absolute; left: 0; top: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer;">
+
+    <option value="+62">🇮🇩 Indonesia +62</option>
+    <option value="+673">🇧🇳 Brunei +673</option>
+    <option value="+855">🇰🇭 Cambodia +855</option>
+    <option value="+856">🇱🇦 Laos +856</option>
+    <option value="+60">🇲🇾 Malaysia +60</option>
+    <option value="+95">🇲🇲 Myanmar +95</option>
+    <option value="+63">🇵🇭 Philippines +63</option>
+    <option value="+65">🇸🇬 Singapore +65</option>
+    <option value="+66">🇹🇭 Thailand +66</option>
+    <option value="+670">🇹🇱 Timor-Leste +670</option>
+    <option value="+84">🇻🇳 Vietnam +84</option>
+    <option value="+81">🇯🇵 Japan +81</option>
+    <option value="+82">🇰🇷 South Korea +82</option>
+</select>
+
+        </div>
+
+        <input type="checkbox" name="skip_kode_negara" id="skipKodeNegara">
+<label for="skipKodeNegara">No country code</label>
+
+</div>
+
+
+    <div class="col-md-8">
+        <label for="nohp" class="form-label">Nomor HP</label>
+        <input type="tel" class="form-control" id="nohp" name="nohp" placeholder="812xxxxxxx" required>
+    </div>
+</div>
+
+
+    </div>
+</div>
+
 
             <!-- Ringkasan Pemesanan -->
             <div class="col-md-4 mb-4">
@@ -134,5 +186,34 @@
 </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+    document.getElementById('skipKodeNegara').addEventListener('change', function () {
+        const kodeNegaraSelect = document.getElementById('kode_negara');
+        const nohpInput = document.getElementById('nohp');
+
+        if (this.checked) {
+            kodeNegaraSelect.disabled = true;
+            nohpInput.disabled = true;
+            nohpInput.removeAttribute('required');
+        } else {
+            kodeNegaraSelect.disabled = false;
+            nohpInput.disabled = false;
+            nohpInput.setAttribute('required', 'required');
+        }
+    });
+</script>
+<script>
+    const select = document.getElementById('kode_negara');
+    const display = document.getElementById('displayKode');
+
+    // Set tampilan awal
+    display.value = select.value;
+
+    // Update tampilan saat user memilih
+    select.addEventListener('change', function () {
+        display.value = this.value;
+    });
+</script>
+
 </body>
 </html>

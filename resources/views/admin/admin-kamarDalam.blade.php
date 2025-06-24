@@ -53,7 +53,7 @@
         </tr>
     </thead>
     <tbody class="text-center align-middle">
-        @foreach ($kamarDalam as $kamar)
+        @foreach ($kamars as $kamar)
 <tr>
     <td>{{ $loop->iteration }}</td>
     <td>
@@ -118,8 +118,8 @@
             <select class="form-control" id="roomType" name="jenisKamar" required>
             <option value="" disabled selected>-- Pilih Jenis Kamar --</option>
             @foreach ($kamarDepan as $item)
-            <option value="{{ $item->jenisKamar }}">{{ $item->jenisKamar }}</option>
-                @endforeach
+                    <option value="{{ $item }}">{{ $item }}</option>
+            @endforeach
             </select>
           </div>
           <div class="mb-3">
@@ -252,7 +252,7 @@
         function restrictFiles(input, maxFiles) {
             if (input.files.length > maxFiles) {
                 alert('Maksimal ' + maxFiles + ' gambar aja, bro!');
-                input.value = ''; // Reset input kalo kebanyakan
+                input.value = '';
             }
         }
         </script>

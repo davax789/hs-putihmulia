@@ -10,12 +10,9 @@ use Carbon\Carbon;
 
 class TransaksiController extends Controller
 {
-    /**
-     * Menampilkan halaman booking (form pemilihan tanggal).
-     */
+
     public function create()
     {
-        // Asumsi ada view booking.blade.php untuk halaman booking
         $kamars = Kamar::all();
         return view('booking', compact('kamars'));
     }
@@ -47,7 +44,7 @@ $total_harga = $diffDays * $hargaPermalam;
 
 
         return view('user.user-transaksi', compact('kamar', 'check_in', 'check_out', 'total_harga'));
-        
+
 }
 }
 ?>

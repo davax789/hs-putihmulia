@@ -20,7 +20,8 @@
       <div class="card shadow-sm p-3 bg-white">
         <div class="card-body">
           <h5><i class="fas fa-receipt text-primary me-2"></i>Total Order</h5>
-          <p class="text-muted fs-5">db</p>
+          <p class="text-muted fs-5">{{ $totalOrder}}</p>
+
         </div>
       </div>
     </div>
@@ -28,19 +29,10 @@
       <div class="card shadow-sm p-3 bg-white">
         <div class="card-body">
           <h5><i class="fas fa-bed text-success me-2"></i>Available Rooms</h5>
-          <p class="text-muted fs-5">db</p>
+          <p class="text-muted fs-5">{{ $kamarTersedia }}</p>
         </div>
       </div>
     </div>
-    <div class="col-md-4 mb-4">
-      <div class="card shadow-sm p-3 bg-white">
-        <div class="card-body">
-          <h5><i class="fas fa-user-check text-warning me-2"></i>Semua Order</h5>
-          <p class="text-muted fs-5">db</p>
-        </div>
-      </div>
-    </div>
-  </div>
 
   <!-- Tabel Booking dengan Search -->
   <div class="card shadow-sm bg-white">
